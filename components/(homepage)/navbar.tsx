@@ -5,10 +5,12 @@ import { Sparkles, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { UserButton } from "@/fetures/auth/components/user-button";
+
 type Props = {
   user: any;
 };
-export function Navbar({user}:Props) {
+
+export function Navbar({ user }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,6 +21,26 @@ export function Navbar({user}:Props) {
   }, []);
 
   const NAV_LINKS = ["Features", "Pricing", "About"];
+
+  // Handle smooth scroll and offset for fixed navbar
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, linkName: string) => {
+    e.preventDefault();
+    const targetId = linkName.toLowerCase();
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      // Get the element's position and subtract the navbar height (approx 64px / h-16)
+      const offsetTop = targetElement.getBoundingClientRect().top + window.scrollY - 64;
+      
+      window.scrollTo({
+        top: offsetTop,
+        behavior: "smooth"
+      });
+    }
+    
+    // Close mobile menu after clicking a link
+    setMobileOpen(false);
+  };
 
   return (
     <header
@@ -46,6 +68,7 @@ export function Navbar({user}:Props) {
             <a
               key={l}
               href={`#${l.toLowerCase()}`}
+              onClick={(e) => handleScroll(e, l)}
               className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
               {l}
@@ -55,16 +78,20 @@ export function Navbar({user}:Props) {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-3">
-          {user?<UserButton/>:<Link
-            href="/sign-in"
-            className="text-sm font-medium text-slate-700 hover:text-slate-900 px-3 py-1.5"
-          >
-            Log in
-          </Link>}
+          {user ? (
+            <UserButton />
+          ) : (
+            <Link
+              href="/sign-in"
+              className="text-sm font-medium text-slate-700 hover:text-slate-900 px-3 py-1.5"
+            >
+              Log in
+            </Link>
+          )}
           <button className="text-sm font-semibold text-white px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 hover:opacity-90 transition-opacity shadow-md shadow-indigo-200">
-             <Link href={user?"/dashboard":"/sign-in"} className="cursor-pointer">
-             {user?"Open Console": "Get Started"}
-             </Link>
+            <Link href={user ? "/dashboard" : "/sign-in"} className="cursor-pointer">
+              {user ? "Open Console" : "Get Started"}
+            </Link>
           </button>
         </div>
 
@@ -88,22 +115,25 @@ export function Navbar({user}:Props) {
             <a
               key={l}
               href={`#${l.toLowerCase()}`}
+              onClick={(e) => handleScroll(e, l)}
               className="block text-sm font-medium text-slate-700 py-1.5"
             >
               {l}
             </a>
           ))}
-         {user?
-
-          <UserButton/>: <Link
-            href="/sign-in"
-            className="block text-sm text-slate-700"
-          >
-            Log in
-          </Link>}
+          {user ? (
+            <UserButton />
+          ) : (
+             <Link
+              href="/sign-in"
+              className="block text-sm text-slate-700"
+            >
+              Log in
+            </Link>
+          )}
           <button className="w-full mt-2 text-sm font-semibold text-white px-4 py-2.5 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600">
-           <Link href={user?"/dashboard":"/sign-in"} className="cursor-pointer">
-            {user?"Open Console": "Get Started"}
+            <Link href={user ? "/dashboard" : "/sign-in"} className="cursor-pointer block w-full text-center">
+              {user ? "Open Console" : "Get Started"}
             </Link>
           </button>
         </div>
