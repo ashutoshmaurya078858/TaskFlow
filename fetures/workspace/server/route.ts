@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createWorkspaceSchema } from "../schemas";
+import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 import { sessionMiddleware } from "@/lib/section-meddleware";
 import { BUCKETID, DATABASE_ID, MEMBER_ID, WORKSPACES_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
@@ -8,15 +8,15 @@ import { MemberRole } from "@/fetures/Members/types";
 import { generateInviteCode } from "@/lib/utils";
 
 const app = new Hono()
- .get("/", sessionMiddleware, async (c) => {
+  .get("/", sessionMiddleware, async (c) => {
     const databases = c.get("databases");
     const user = c.get("user");
 
     // 1. Query the MEMBERS collection, not the WORKSPACES collection
     const members = await databases.listDocuments(
-      DATABASE_ID, 
+      DATABASE_ID,
       MEMBER_ID, // <-- FIX: This was previously WORKSPACES_ID
-      [Query.equal("userId", user.$id)]
+      [Query.equal("userId", user.$id)],
     );
 
     if (members.total === 0) {
@@ -30,13 +30,13 @@ const app = new Hono()
       DATABASE_ID,
       WORKSPACES_ID,
       [
-        Query.orderDesc("$createdAt"), 
-        Query.equal("$id", workspaceIds) // <-- FIX: Changed from Query.contains
-      ]
+        Query.orderDesc("$createdAt"),
+        Query.equal("$id", workspaceIds), // <-- FIX: Changed from Query.contains
+      ],
     );
 
     return c.json({ data: workspaces });
-})
+  })
   .post(
     "/",
     zValidator("form", createWorkspaceSchema),
@@ -64,7 +64,7 @@ const app = new Hono()
           name,
           userId: user.$id,
           imageUrl: uploadedImageUrl,
-          inviteCode:generateInviteCode(7)
+          inviteCode: generateInviteCode(7),
         },
       );
       await databases.createDocument(DATABASE_ID, MEMBER_ID, ID.unique(), {
@@ -75,6 +75,6 @@ const app = new Hono()
 
       return c.json({ data: workspace });
     },
-  );
-
+  )
+  
 export default app;

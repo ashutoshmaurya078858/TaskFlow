@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
-import { ImageIcon } from "lucide-react"; 
+import { ImageIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -18,14 +18,16 @@ import { Label } from "@/components/ui/label";
 import { createWorkspaceSchema } from "../schemas";
 import { useCreateWorkspace } from "../api/use-create-workspce";
 import { toast } from "sonner";
-import Image from "next/image"; 
+import Image from "next/image";
 
 interface CreateWorkspaceFormProps {
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
 // 1. FIXED: Destructure onCancel from the props here
-export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
+export const CreateWorkspaceForm = ({
+  onCancel,
+}: CreateWorkspaceFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,10 +50,10 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
       onSuccess: () => {
         toast.success("Workspace Created");
         form.reset();
-        setImagePreview(null); 
-        
+        setImagePreview(null);
+
         // 2. FIXED: Uncommented this so the modal closes on success!
-        onCancel();
+        onCancel?.();
       },
     });
   };
@@ -60,7 +62,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
     const file = e.target.files?.[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
-      form.setValue("image", file as any); 
+      form.setValue("image", file as any);
     }
   };
 
@@ -158,6 +160,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
               </div>
 
               <div className="flex gap-3 mt-4">
+                
                 <Button
                   type="button"
                   variant="outline"
@@ -165,7 +168,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                   onClick={onCancel} // 3. FIXED: Added the onClick handler here!
                   className="flex-1 border-gray-300 h-11 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition disabled:opacity-50"
                 >
-                  Cancel
+                Cancel
                 </Button>
                 <Button
                   type="submit"
