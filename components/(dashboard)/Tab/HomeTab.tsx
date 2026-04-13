@@ -1,12 +1,16 @@
-import { CreateWorkspaceForm } from '@/fetures/workspace/components/create-workspace'
-import React from 'react'
+import { Getworkspage } from '@/fetures/workspace/action';
+import { redirect } from 'next/navigation';
 
-const HomeTab = () => {
-  return (
-    <div>
-      <CreateWorkspaceForm/>
-    </div>
-  )
-}
+const HomeTab = async () => {
+  const workspaces = await Getworkspage();
 
-export default HomeTab
+  if (workspaces.total === 0) {
+    redirect("/dashboard/create");
+  } else {
+    redirect(`/dashboard/workspace/${workspaces.documents[0].$id}`);
+  }
+
+  return null; // important: no UI after redirect
+};
+
+export default HomeTab;
