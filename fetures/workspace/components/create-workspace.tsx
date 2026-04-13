@@ -3,8 +3,8 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState } from "react"; // Added React hooks
-import { ImageIcon } from "lucide-react"; // Added standard icon
+import { useRef, useState } from "react";
+import { ImageIcon } from "lucide-react"; 
 import {
   Card,
   CardContent,
@@ -18,14 +18,14 @@ import { Label } from "@/components/ui/label";
 import { createWorkspaceSchema } from "../schemas";
 import { useCreateWorkspace } from "../api/use-create-workspce";
 import { toast } from "sonner";
-import Image from "next/image"; // For the preview
+import Image from "next/image"; 
 
 interface CreateWorkspaceFormProps {
   onCancel: () => void;
 }
 
-export const CreateWorkspaceForm = () => {
-  // 1. Setup state for the image preview
+// 1. FIXED: Destructure onCancel from the props here
+export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,7 +33,6 @@ export const CreateWorkspaceForm = () => {
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
       name: "",
-      // Note: your schema will need to handle the image file (see notes below)
     },
   });
 
@@ -49,25 +48,24 @@ export const CreateWorkspaceForm = () => {
       onSuccess: () => {
         toast.success("Workspace Created");
         form.reset();
-        setImagePreview(null); // Clear preview on success
-        // onCancel();
+        setImagePreview(null); 
+        
+        // 2. FIXED: Uncommented this so the modal closes on success!
+        onCancel();
       },
     });
   };
 
-  // 2. Handle file selection and preview creation
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Create a local URL so the user can see what they uploaded
       setImagePreview(URL.createObjectURL(file));
-      // Manually set the file in the react-hook-form state
-      form.setValue("image", file as any); // Type cast depends on your updated schema
+      form.setValue("image", file as any); 
     }
   };
 
   return (
-    <div className="flex items-center justify-center px-4 w-full">
+    <div className="flex items-center justify-center w-full">
       <div className="relative z-10 w-full max-w-2xl">
         <Card className="bg-white border backdrop-blur-md shadow-sm border-b border-slate-100 rounded-xl overflow-hidden">
           <CardHeader className="pb-2 px-6 pt-6">
@@ -96,7 +94,6 @@ export const CreateWorkspaceForm = () => {
                   Workspace Logo
                 </Label>
                 <div className="flex items-center gap-x-5">
-                  {/* Avatar Preview Circle */}
                   <div className="relative w-16 h-16 rounded-full overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center">
                     {imagePreview ? (
                       <Image
@@ -110,7 +107,6 @@ export const CreateWorkspaceForm = () => {
                     )}
                   </div>
 
-                  {/* Hidden File Input & Trigger Button */}
                   <div className="flex flex-col">
                     <p className="text-sm text-gray-500 mb-2">
                       JPG, PNG, SVG or GIF, max 2MB
@@ -165,8 +161,8 @@ export const CreateWorkspaceForm = () => {
                 <Button
                   type="button"
                   variant="outline"
-               
                   disabled={isPending}
+                  onClick={onCancel} // 3. FIXED: Added the onClick handler here!
                   className="flex-1 border-gray-300 h-11 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition disabled:opacity-50"
                 >
                   Cancel
