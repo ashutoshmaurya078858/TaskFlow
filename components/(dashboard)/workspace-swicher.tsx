@@ -69,15 +69,17 @@ export function WorkspaceSwitcher() {
       <SidebarMenu>
         {/* 1. Header is now safely in its OWN SidebarMenuItem */}
         <SidebarMenuItem className="mb-2">
-          <div className="flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            <span>Workspaces</span>
+          <div className="flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-2">
+            <span className="group-data-[collapsible=icon]:hidden">
+              Workspaces
+            </span>
             <button
               type="button"
               onClick={() => setIsOpen(true)}
               className="flex size-5 items-center justify-center rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors cursor-pointer"
               title="Create new workspace"
             >
-              <Plus className="size-3.5" />
+              <Plus className="size-4 " />
             </button>
           </div>
         </SidebarMenuItem>
