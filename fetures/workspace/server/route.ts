@@ -92,7 +92,7 @@ const app = new Hono()
       const member = await getmember({
         databases: databases,
         userId: user.$id,
-        workspace: workspace,
+        workspaceId: workspace,
       });
 
       if (!member || member.role !== MemberRole.ADMIN) {

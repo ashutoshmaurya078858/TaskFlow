@@ -28,10 +28,9 @@ const router = useRouter()
     },
 
     onSuccess: ({data}) => {
-  toast.success("workspace updated")
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces",data.$id] });
-      // router.push(`/dashboard/workspace/${response.data.$id}`)
+      // router.push(`/dashboard/workspace/${data.$id}`)
    
     },
     onError:()=>{

@@ -2,8 +2,10 @@ import "server-only";
 import { AUTH_COOKIE } from "@/app/(auth)/constence";
 import { cookies } from "next/headers";
 import { Account, Client, Databases, Query } from "node-appwrite";
-import { cache } from "react";
+import { cache, use } from "react";
 import { DATABASE_ID, MEMBER_ID, WORKSPACES_ID } from "@/config";
+import { getmember } from "../Members/utils";
+import { workspace } from "./typs";
 
 // Wrap your async function in cache()
 export const Getworkspage = cache(async () => {
@@ -49,3 +51,45 @@ export const Getworkspage = cache(async () => {
     return { documents: [], total: 0 };
   }
 });
+
+interface GetOneworkspageProps {
+  workspaceId: string;
+}
+
+export const GetOneworkspage = cache(
+  async ({ workspaceId }: GetOneworkspageProps) => {
+    try {
+      const cookieStore = await cookies();
+      const session = cookieStore.get(AUTH_COOKIE);
+
+      if (!session) return null;
+
+      const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APP_APPWRITE_ENDPOINT!)
+        .setProject(process.env.NEXT_PUBLIC_APP_APPWRITE_PROJECT!)
+        .setSession(session.value);
+
+      const databases = new Databases(client);
+      const acount = new Account(client);
+      const user = await acount.get();
+      const member = await getmember({
+        databases,
+        userId: user.$id,
+        workspaceId: workspaceId,
+      });
+      if (!member) return null;
+
+      const workspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId,
+      );
+
+      return JSON.parse(JSON.stringify(workspace));
+     
+    } catch (error) {
+      console.error("GET_CURRENT_ERROR", error);
+      return { documents: [], total: 0 };
+    }
+  },
+);

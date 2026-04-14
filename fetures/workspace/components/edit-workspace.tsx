@@ -16,24 +16,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { updateWorkspaceSchema } from "../schemas";
-import { useCreateWorkspace } from "../api/use-create-workspce";
-import { toast } from "sonner";
 import Image from "next/image";
 import { workspace } from "../typs";
 import { useUpdateWorkspace } from "../api/use-update-workspce";
-
+import { toast } from "sonner"; // Make sure to import toast if you want to use it
+import { useRouter } from "next/navigation";
 interface EditWorkspaceFormProps {
   onCancel?: () => void;
   initialValues: workspace;
 }
 
-// 1. FIXED: Destructure onCancel from the props here
 export const EditWorkspaceForm = ({
-  onCancel,
+  
   initialValues,
 }: EditWorkspaceFormProps) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // FIX 1: Initialize preview with the existing image URL so it shows up immediately
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialValues.imageUrl || null,
+  );
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
     resolver: zodResolver(updateWorkspaceSchema),
@@ -58,12 +60,9 @@ export const EditWorkspaceForm = ({
       },
       {
         onSuccess: () => {
-          toast.success("Workspace Created");
+          toast.success("Workspace Updated");
           form.reset();
-          setImagePreview(null);
-
-          // 2. FIXED: Uncommented this so the modal closes on success!
-          onCancel?.();
+          router.push(`/dashboard/workspace/${initialValues.$id}`);
         },
       },
     );
@@ -82,11 +81,12 @@ export const EditWorkspaceForm = ({
       <div className="relative z-10 w-full max-w-2xl">
         <Card className="bg-white border backdrop-blur-md shadow-sm border-b border-slate-100 rounded-xl overflow-hidden">
           <CardHeader className="pb-2 px-6 pt-6">
+            {/* FIX 3: Updated text to reflect this is an Edit form */}
             <CardTitle className="text-2xl font-bold text-gray-900">
-              Create Workspace
+              Edit Workspace
             </CardTitle>
             <CardDescription className="text-gray-500 text-sm mt-1">
-              Set up a workspace for your team to collaborate.
+              Update your workspace details and logo.
             </CardDescription>
           </CardHeader>
 
@@ -95,7 +95,7 @@ export const EditWorkspaceForm = ({
               <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-600 text-sm">
                 <p>
                   {error?.message ||
-                    "Something went wrong while creating the workspace. Please try again."}
+                    "Something went wrong while updating the workspace. Please try again."}
                 </p>
               </div>
             )}
@@ -175,17 +175,18 @@ export const EditWorkspaceForm = ({
                   type="button"
                   variant="outline"
                   disabled={isPending}
-                  onClick={onCancel} // 3. FIXED: Added the onClick handler here!
+                  onClick={()=>router.push(`/dashboard/workspace/${initialValues.$id}`)}
                   className="flex-1 border-gray-300 h-11 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition disabled:opacity-50"
                 >
                   Cancel
                 </Button>
+                {/* FIX 4: Updated submit button text */}
                 <Button
                   type="submit"
                   disabled={isPending}
                   className="flex-1 bg-indigo-600 h-11 hover:bg-indigo-500 text-white font-semibold rounded-lg transition disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {isPending ? "Creating..." : "Create Workspace"}
+                  {isPending ? "Saving Changes..." : "Save Changes"}
                 </Button>
               </div>
             </form>
