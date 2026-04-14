@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+// 1. Import useParams and usePathname instead of useSearchParams
+import { useParams, usePathname } from "next/navigation";
 import {
   Zap,
   Search,
@@ -47,9 +48,14 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   
-  // Get the current tab directly from the URL for active states
-  const searchParams = useSearchParams();
-  const currentTab = searchParams.get("tab") || "home";
+  // 2. Extract the current path and dynamic workspace ID from the URL
+  const pathname = usePathname();
+  const params = useParams();
+  
+  // Note: Ensure this matches the exact folder name in your Next.js app directory. 
+  // e.g., if your folder is [workspaceId], use params.workspaceId
+  // Since your backend used "workspace", we will assume params.workspace
+  const workspaceId = params.workspace as string; 
 
   React.useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme === "dark";
@@ -96,8 +102,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarMenu>
             {NAV_ITEMS.map(({ title, id, icon: Icon, badge }) => {
-              // Active state now driven by URL params
-              const isActive = currentTab === id;
+              // 3. Construct the dynamic URL for each navigation item
+              // If it's the "home" id, it just goes to the root of the workspace.
+              // Otherwise, it appends the specific page (e.g. /settings)
+              const href = id === "home" 
+                ? `/dashboard/workspace/${workspaceId}` 
+                : `/dashboard/${workspaceId}/${id}`;
+
+              // 4. Check if the current URL matches the item's destination URL
+              const isActive = pathname === href;
               
               return (
                 <SidebarMenuItem key={id}>
@@ -112,7 +125,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         : "border-l-transparent",
                     )}
                   >
-                    <Link href={`/dashboard?tab=${id}`} scroll={false}>
+                    <Link href={href}>
                       <Icon
                         className={cn(
                           "h-4 w-4 shrink-0",

@@ -3,7 +3,10 @@ import React from 'react'
 
 const page = () => {
   return (
-    <CreateWorkspaceForm/>
+    <div className='flex items-center justify-center h-screen'>
+
+      <CreateWorkspaceForm/>
+    </div>
   )
 }
 

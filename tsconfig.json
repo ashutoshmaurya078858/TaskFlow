@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "fetures/workspace/server"  ],
+, "fetures/workspace/server", "app/(singlepages)/dashboard/[workspace]/settings"  ],
   "exclude": ["node_modules"]
 }
