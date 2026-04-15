@@ -6,12 +6,17 @@ export function Features() {
     <section className="py-24 bg-white" id="features">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <FadeIn className="text-center mb-16">
-          <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-3">Everything you need</p>
+          <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-3">
+            Everything you need
+          </p>
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Built for how teams<br />actually work
+            Built for how teams
+            <br />
+            actually work
           </h2>
           <p className="max-w-xl mx-auto text-slate-500 text-lg">
-            Stop juggling tools. FlowTask unifies planning, tracking and shipping in one place.
+            Stop juggling tools. FlowTask unifies planning, tracking and
+            shipping in one place.
           </p>
         </FadeIn>
 
@@ -24,8 +29,12 @@ export function Features() {
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center mb-4 transition-colors">
                     <Icon className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-2">{title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
+                  <h3 className="text-sm font-bold text-slate-900 mb-2">
+                    {title}
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             </FadeIn>

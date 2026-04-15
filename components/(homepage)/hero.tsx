@@ -2,7 +2,6 @@ import { Sparkles, ChevronRight, MoveRight, Play } from "lucide-react";
 import { CountUp, FadeIn } from "./shared";
 import { KanbanMock } from "./mocks";
 
-
 export function Hero() {
   return (
     <section className="relative pt-32 pb-24 overflow-hidden bg-white">
@@ -30,8 +29,8 @@ export function Hero() {
 
         <FadeIn delay={160}>
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-500 leading-relaxed mb-10">
-            FlowTask brings sprint planning, issue tracking, and real-time collaboration into one
-            beautiful workspace. Ship more, stress less.
+            FlowTask brings sprint planning, issue tracking, and real-time
+            collaboration into one beautiful workspace. Ship more, stress less.
           </p>
         </FadeIn>
 
@@ -52,12 +51,19 @@ export function Hero() {
           <div className="flex flex-wrap items-center justify-center gap-8 mt-12 mb-14">
             {[
               { n: 10000, s: "+", label: "Teams worldwide" },
-              { n: 4.9,   s: "/5", label: "Avg rating" },
-              { n: 99,    s: "% uptime", label: "SLA guaranteed" },
+              { n: 4.9, s: "/5", label: "Avg rating" },
+              { n: 99, s: "% uptime", label: "SLA guaranteed" },
             ].map(({ n, s, label }) => (
               <div key={label} className="text-center">
                 <p className="text-2xl font-bold text-slate-900">
-                  {label === "Avg rating" ? <>{n}{s}</> : <CountUp end={n as number} suffix={s} />}
+                  {label === "Avg rating" ? (
+                    <>
+                      {n}
+                      {s}
+                    </>
+                  ) : (
+                    <CountUp end={n as number} suffix={s} />
+                  )}
                 </p>
                 <p className="text-xs text-slate-400 mt-0.5">{label}</p>
               </div>
@@ -67,7 +73,10 @@ export function Hero() {
 
         <FadeIn delay={400}>
           <div className="relative mx-auto max-w-5xl">
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10 pointer-events-none" style={{ top: "70%" }} />
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10 pointer-events-none"
+              style={{ top: "70%" }}
+            />
             <div className="bg-white rounded-2xl shadow-2xl shadow-slate-200 border border-slate-200 overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 border-b border-slate-200">
                 <div className="w-3 h-3 rounded-full bg-red-400" />
