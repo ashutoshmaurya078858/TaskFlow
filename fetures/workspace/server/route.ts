@@ -108,13 +108,13 @@ const app = new Hono()
         uploadedImageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${BUCKETID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APP_APPWRITE_PROJECT}`;
       } else if (image === "") {
         // Optional: handle clearing the image if the user removes it on the frontend
-        uploadedImageUrl = ""; 
+        uploadedImageUrl = "";
       }
 
       // 3. Construct the payload dynamically
       // We only want to update fields that were actually provided
       const updatePayload: Record<string, any> = {};
-      
+
       if (name) {
         updatePayload.name = name;
       }
@@ -127,11 +127,30 @@ const app = new Hono()
         DATABASE_ID,
         WORKSPACES_ID,
         workspace, // The document ID from the route param
-        updatePayload
+        updatePayload,
       );
 
       // 5. Return the updated workspace
       return c.json({ data: updatedWorkspace });
     },
-  );
+  )
+  .delete("/:workspace", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+    const { workspace } = c.req.param();
+
+    // 1. Authorize the user
+    const member = await getmember({
+      databases: databases,
+      userId: user.$id,
+      workspaceId: workspace,
+    });
+
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unauthorized" }, 401); // Fixed typo: Unauthorized
+    }
+
+    await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspace);
+    return c.json({ data: { $id: workspace } });
+  });
 export default app;
