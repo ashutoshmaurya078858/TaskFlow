@@ -4,9 +4,9 @@ import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 import { sessionMiddleware } from "@/lib/section-meddleware";
 import { BUCKETID, DATABASE_ID, MEMBER_ID, WORKSPACES_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
-import { MemberRole } from "@/fetures/Members/types";
+import { MemberRole } from "@/fetures/members/types";
 import { generateInviteCode } from "@/lib/utils";
-import { getmember } from "@/fetures/Members/utils";
+import { getmember } from "@/fetures/members/utils";
 import z from "zod";
 import { workspace } from "../typs";
 
@@ -201,7 +201,7 @@ const app = new Hono()
       if (member) {
         return c.json({ error: "Already a member" }, 400);
       }
-      const workspaces = await databases.updateDocument<workspace>(
+      const workspaces = await databases.getDocument<workspace>(
         DATABASE_ID,
         WORKSPACES_ID,
         workspace,

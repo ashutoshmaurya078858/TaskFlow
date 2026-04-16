@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { Account, Client, Databases, Query } from "node-appwrite";
 import { cache, use } from "react";
 import { DATABASE_ID, MEMBER_ID, WORKSPACES_ID } from "@/config";
-import { getmember } from "../Members/utils";
+import { getmember } from "../members/utils";
 import { workspace } from "./typs";
 
 // Wrap your async function in cache()
@@ -90,6 +90,46 @@ export const GetOneworkspage = cache(
     } catch (error) {
       console.error("GET_CURRENT_ERROR", error);
       return { documents: [], total: 0 };
+    }
+  },
+);
+
+
+
+
+interface GetOneworkspageInfoProps {
+  workspaceId: string;
+}
+
+export const GetOneworkspageInfo = cache(
+  async ({ workspaceId }: GetOneworkspageInfoProps) => {
+    try {
+      const cookieStore = await cookies();
+      const session = cookieStore.get(AUTH_COOKIE);
+
+      if (!session) return null;
+
+      const client = new Client()
+        .setEndpoint(process.env.NEXT_PUBLIC_APP_APPWRITE_ENDPOINT!)
+        .setProject(process.env.NEXT_PUBLIC_APP_APPWRITE_PROJECT!)
+        .setSession(session.value);
+
+      const databases = new Databases(client);
+     
+
+      const workspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId,
+      );
+
+      return {
+        name:workspace.name
+      }
+     
+    } catch (error) {
+      console.error("GET_CURRENT_ERROR", error);
+      return null
     }
   },
 );
