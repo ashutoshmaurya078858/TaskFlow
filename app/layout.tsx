@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ReactQueryProvider } from "@/components/(homepage)/quary-provider";
 import { Toaster } from "sonner";
+import { OfflineScreen } from "@/components/(homepage)/offline-screen";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -17,15 +18,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", "font-sans", inter.variable)}
+      className={cn("h-full", "antialiased", "foßßnt-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <ReactQueryProvider>{children}
-           <Toaster />
+        <ReactQueryProvider>
+          <OfflineScreen>{children}</OfflineScreen>
+          <Toaster />
         </ReactQueryProvider>
       </body>
     </html>
