@@ -17,10 +17,9 @@ const page = async ({ params }: settingsProp) => {
     const initialValues = await GetOneworkspage({workspaceId:workspace})
 
   return (
-    <div className='flex items-center justify-center h-screen'>
-
-      <EditWorkspaceForm initialValues={initialValues} />
-    </div>
+   <div className="w-full max-w-3xl mx-auto">
+  <EditWorkspaceForm initialValues={initialValues} />
+</div>
   );
 };
 

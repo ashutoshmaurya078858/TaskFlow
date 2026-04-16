@@ -7,6 +7,8 @@ import { ID, Query } from "node-appwrite";
 import { MemberRole } from "@/fetures/Members/types";
 import { generateInviteCode } from "@/lib/utils";
 import { getmember } from "@/fetures/Members/utils";
+import z from "zod";
+import { workspace } from "../typs";
 
 const app = new Hono()
   .get("/", sessionMiddleware, async (c) => {
@@ -152,5 +154,70 @@ const app = new Hono()
 
     await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspace);
     return c.json({ data: { $id: workspace } });
-  });
+  })
+
+  .post("/:workspace/reset-invite-code", sessionMiddleware, async (c) => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+    const { workspace } = c.req.param();
+
+    // 1. Authorize the user
+    const member = await getmember({
+      databases: databases,
+      userId: user.$id,
+      workspaceId: workspace,
+    });
+
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json({ error: "Unauthorized" }, 401); // Fixed typo: Unauthorized
+    }
+
+    const workspaces = await databases.updateDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspace,
+      {
+        inviteCode: generateInviteCode(7),
+      },
+    );
+    return c.json({ data: workspaces });
+  })
+  .post(
+    "/:workspace/join",
+    sessionMiddleware,
+    zValidator("json", z.object({ code: z.string() })),
+    async (c) => {
+      const databases = c.get("databases");
+      const user = c.get("user");
+      const { workspace } = c.req.param();
+      const { code } = c.req.valid("json");
+
+      // 1. Authorize the user
+      const member = await getmember({
+        databases: databases,
+        userId: user.$id,
+        workspaceId: workspace,
+      });
+      if (member) {
+        return c.json({ error: "Already a member" }, 400);
+      }
+      const workspaces = await databases.updateDocument<workspace>(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspace,
+      );
+
+      if (workspaces.inviteCode !== code) {
+        return c.json({ error: "Invilad code" }, 400);
+      }
+
+      await databases.createDocument(DATABASE_ID, MEMBER_ID, ID.unique(), {
+        workspaceId: workspace,
+        userId: user.$id,
+        role: MemberRole.MEMBER,
+      });
+      return c.json({ data: workspaces });
+    },
+  );
+
 export default app;

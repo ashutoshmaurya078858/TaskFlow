@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useDeleteWorkspace } from "../api/use-delete-workspcs";
 import { ResponsiveModal } from "@/components/(dashboard)/responsive-model";
+import { useResetWorkspace } from "../api/use-reset-workspace";
 
 interface EditWorkspaceFormProps {
   onCancel?: () => void;
@@ -38,6 +39,7 @@ export const EditWorkspaceForm = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 👈 modal state
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { mutate: resetInvite, isPending: isResetting } = useResetWorkspace();
 
   const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
     resolver: zodResolver(updateWorkspaceSchema),
@@ -48,7 +50,8 @@ export const EditWorkspaceForm = ({
   });
 
   const { mutate, isPending, isError, error } = useUpdateWorkspace();
-  const { mutate: deleteWorkspace, isPending: isDeleting } = useDeleteWorkspace(); // 👈 delete hook
+  const { mutate: deleteWorkspace, isPending: isDeleting } =
+    useDeleteWorkspace(); // 👈 delete hook
 
   const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
     const finalValues = {
@@ -94,8 +97,21 @@ export const EditWorkspaceForm = ({
     }
   };
 
+  const inviteCode = `${window.location.origin}/dashboard/${initialValues.$id}/join/${initialValues.inviteCode}`;
+
+  const handleResetInvite = () => {
+    resetInvite(
+      { param: { workspace: initialValues.$id } },
+      {
+        onSuccess: () => {
+          router.refresh(); // optional but recommended
+        },
+      },
+    );
+  };
+
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-center justify-center w-full md:mt-28 mt-20">
       <div className="relative z-10 w-full max-w-2xl">
         <Card className="bg-white border backdrop-blur-md shadow-sm border-b border-slate-100 rounded-xl overflow-hidden">
           <CardHeader className="pb-2 px-6 pt-6">
@@ -207,6 +223,57 @@ export const EditWorkspaceForm = ({
                 </Button>
               </div>
             </form>
+            {/* 👇 INVITE CODE SECTION */}
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">
+                Invite Members
+              </p>
+
+              <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 space-y-4">
+                {/* Invite Link */}
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Invite Link</p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      value={inviteCode}
+                      readOnly
+                      className="flex-1 text-xs bg-white border rounded-md px-3 py-2 text-gray-600 truncate"
+                    />
+
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        navigator.clipboard.writeText(inviteCode);
+                        toast.success("Invite link copied!");
+                      }}
+                      className="text-xs"
+                    >
+                      Copy
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-between items-center pt-2">
+                  <p className="text-xs text-gray-400">
+                    Anyone with this link can join this workspace
+                  </p>
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={isResetting}
+                    onClick={handleResetInvite}
+                    className="text-xs"
+                  >
+                    {isResetting ? "Resetting..." : "Reset Code"}
+                  </Button>
+                </div>
+              </div>
+            </div>
 
             {/* 👇 DANGER ZONE — Delete Workspace */}
             <div className="mt-8 pt-6 border-t border-gray-100">
