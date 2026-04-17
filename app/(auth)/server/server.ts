@@ -61,7 +61,9 @@ const app = new Hono()
     await account.deleteSession("current")
 
     return c.json({ success: true }); 
-  });
+  })
+
+  
   
 
 export default app;
