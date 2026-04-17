@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
 import { NAV_ITEMS, PROJECTS } from "@/lib/dashboard";
 import { WorkspaceSwitcher } from "./workspace-swicher";
+import Project from "@/fetures/projects/components/project";
 
 interface AppSidebarProps {
   user: any;
@@ -156,7 +157,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <Plus className="h-3.5 w-3.5" />
           </SidebarGroupAction>
           <SidebarMenu>
-            {PROJECTS.map(({ name, color, icon: Icon, progress }) => (
+            <Project/>
+            {/* {PROJECTS.map(({ name, color, icon: Icon, progress }) => (
               <SidebarMenuItem key={name}>
                 <SidebarMenuButton
                   tooltip={`${name} · ${progress}%`}
@@ -172,7 +174,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   </span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            ))}
+            ))} */}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
