@@ -51,7 +51,6 @@ const DEFAULT_MEMBERS: Member[] = [
 export function InviteModal({
   open,
   onOpenChange,
-  workspaceName = "your workspace", // Make sure to pass the real workspace name when using this modal!
   members = DEFAULT_MEMBERS,
   onSendInvite,
 }: InviteModalProps) {
@@ -70,6 +69,8 @@ export function InviteModal({
   const inviteLink = data?.documents?.[0]
     ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/${data.documents[0].$id}/join/${data.documents[0].inviteCode}`
     : "";
+
+    const workspaceName  = data?.documents?.[0].name
 
   // Focus email input when modal opens
   React.useEffect(() => {

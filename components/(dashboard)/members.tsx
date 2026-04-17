@@ -262,8 +262,6 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
       <InviteModal
         open={open}
         onOpenChange={setOpen}
-        workspaceName="Acme Corp"
-        // onSendInvite={handleSendInvite}
         members={[
           {
             initials: "AK",

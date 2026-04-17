@@ -14,8 +14,8 @@ import {
 } from "@react-email/components";
 
 export default function InviteEmail({
-  workspaceName = "Acme Team",
-  inviteLink = "https://flowtask.io/invite/abc123",
+  workspaceName,
+  inviteLink ,
   inviterName = "Someone",
 }: {
   workspaceName: string;
