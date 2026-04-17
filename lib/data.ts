@@ -100,3 +100,34 @@ export const STATUS_COLOR: Record<string, string> = {
   "In Review":   "bg-purple-100 text-purple-700",
   "Done":        "bg-green-100 text-green-700",
 };
+
+export const AVATAR_COLORS: Record<string, string> = {
+   A: "bg-violet-100 text-violet-700",
+   B: "bg-blue-100 text-blue-700",
+   C: "bg-cyan-100 text-cyan-700",
+   D: "bg-emerald-100 text-emerald-700",
+   E: "bg-amber-100 text-amber-700",
+   F: "bg-rose-100 text-rose-700",
+   G: "bg-pink-100 text-pink-700",
+   H: "bg-indigo-100 text-indigo-700",
+   I: "bg-teal-100 text-teal-700",
+   J: "bg-orange-100 text-orange-700",
+   K: "bg-lime-100 text-lime-700",
+   L: "bg-sky-100 text-sky-700",
+   M: "bg-purple-100 text-purple-700",
+   N: "bg-fuchsia-100 text-fuchsia-700",
+   O: "bg-red-100 text-red-700",
+   P: "bg-yellow-100 text-yellow-700",
+   Q: "bg-green-100 text-green-700",
+   R: "bg-blue-100 text-blue-700",
+   S: "bg-violet-100 text-violet-700",
+   T: "bg-emerald-100 text-emerald-700",
+   U: "bg-cyan-100 text-cyan-700",
+   V: "bg-rose-100 text-rose-700",
+   W: "bg-amber-100 text-amber-700",
+   X: "bg-indigo-100 text-indigo-700",
+   Y: "bg-teal-100 text-teal-700",
+   Z: "bg-orange-100 text-orange-700",
+ };
+ 
+ 

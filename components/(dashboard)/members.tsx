@@ -30,6 +30,8 @@ import { useGetMembers } from "@/fetures/members/api/use-get-members";
 import { ConfirmModal } from "@/hooks/ConfirmModal";
 import { InviteModal } from "../(members)/InviteModal";
 import { useInviteCode } from "@/fetures/workspace/hookes/use-invite-code";
+import { useMappedMembers } from "@/hooks/useMappedMembers";
+import { AVATAR_COLORS } from "@/lib/data";
 
 // Import your new ConfirmModal!
 
@@ -42,35 +44,6 @@ interface Member {
   email: string;
   role: Role;
 }
-
-const AVATAR_COLORS: Record<string, string> = {
-  A: "bg-violet-100 text-violet-700",
-  B: "bg-blue-100 text-blue-700",
-  C: "bg-cyan-100 text-cyan-700",
-  D: "bg-emerald-100 text-emerald-700",
-  E: "bg-amber-100 text-amber-700",
-  F: "bg-rose-100 text-rose-700",
-  G: "bg-pink-100 text-pink-700",
-  H: "bg-indigo-100 text-indigo-700",
-  I: "bg-teal-100 text-teal-700",
-  J: "bg-orange-100 text-orange-700",
-  K: "bg-lime-100 text-lime-700",
-  L: "bg-sky-100 text-sky-700",
-  M: "bg-purple-100 text-purple-700",
-  N: "bg-fuchsia-100 text-fuchsia-700",
-  O: "bg-red-100 text-red-700",
-  P: "bg-yellow-100 text-yellow-700",
-  Q: "bg-green-100 text-green-700",
-  R: "bg-blue-100 text-blue-700",
-  S: "bg-violet-100 text-violet-700",
-  T: "bg-emerald-100 text-emerald-700",
-  U: "bg-cyan-100 text-cyan-700",
-  V: "bg-rose-100 text-rose-700",
-  W: "bg-amber-100 text-amber-700",
-  X: "bg-indigo-100 text-indigo-700",
-  Y: "bg-teal-100 text-teal-700",
-  Z: "bg-orange-100 text-orange-700",
-};
 
 function getAvatarColor(name: string) {
   const letter = name[0]?.toUpperCase() ?? "A";
@@ -223,6 +196,7 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
 
   const isPending = isUpdating || isDeleting;
   const members = (data?.populateMembers as unknown as Member[]) || [];
+  const mappedMembers = useMappedMembers(members);
 
   const handleSetAdmin = (id: string) => {
     updateMember({ param: { memberId: id }, json: { role: "ADMIN" } });
@@ -262,26 +236,7 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
       <InviteModal
         open={open}
         onOpenChange={setOpen}
-        members={[
-          {
-            initials: "AK",
-            name: "Alice Kim",
-            color: "bg-blue-100",
-            textColor: "text-blue-700",
-          },
-          {
-            initials: "RS",
-            name: "Raj Singh",
-            color: "bg-orange-100",
-            textColor: "text-orange-700",
-          },
-          {
-            initials: "MJ",
-            name: "Maya Jones",
-            color: "bg-emerald-100",
-            textColor: "text-emerald-700",
-          },
-        ]}
+        members={mappedMembers}
       />
       <div className="min-h-screen bg-slate-50">
         <div className="max-w-3xl mx-auto px-4 py-10">
@@ -300,7 +255,7 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
             <Button
               onClick={() => setOpen(true)}
               size="sm"
-              className="gap-1.5 bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
+              className="gap-1.5 bg-violet-600 hover:bg-violet-700 text-white shadow-sm cursor-pointer"
             >
               <UserPlus className="h-3.5 w-3.5" />
               Invite

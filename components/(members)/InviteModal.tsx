@@ -186,7 +186,7 @@ export function InviteModal({
                 size="sm"
                 onClick={handleCopy}
                 className={cn(
-                  "shrink-0 h-9 px-3 gap-1.5 text-[13px] font-medium rounded-lg border transition-all duration-200",
+                  "shrink-0 h-9 px-3 gap-1.5 text-[13px] font-medium rounded-lg border transition-all duration-200 cursor-pointer",
                   copied
                     ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
                     : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50",
@@ -248,7 +248,7 @@ export function InviteModal({
                 onClick={handleSend}
                 disabled={sending}
                 className={cn(
-                  "shrink-0 h-9 px-3 gap-1.5 text-[13px] font-medium rounded-lg transition-all duration-200",
+                  "shrink-0 h-9 px-3 gap-1.5 text-[13px] font-medium rounded-lg transition-all duration-200 cursor-pointer",
                   sent
                     ? "bg-emerald-600 hover:bg-emerald-600 text-white border-transparent"
                     : "bg-zinc-900 hover:bg-zinc-800 text-white border-transparent",
@@ -288,7 +288,7 @@ export function InviteModal({
               <div className="flex items-center">
                 {members.slice(0, 4).map((m, i) => (
                   <div
-                    key={m.initials}
+                    key={i}
                     title={m.name}
                     className={cn(
                       "w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-semibold",
