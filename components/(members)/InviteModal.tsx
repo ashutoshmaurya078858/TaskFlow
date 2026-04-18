@@ -41,9 +41,24 @@ interface InviteModalProps {
 // ── Default demo members ───────────────────────────────────────────────────
 
 const DEFAULT_MEMBERS: Member[] = [
-  { initials: "AK", name: "Alice Kim", color: "bg-blue-100", textColor: "text-blue-700" },
-  { initials: "RS", name: "Raj Singh", color: "bg-orange-100", textColor: "text-orange-700" },
-  { initials: "MJ", name: "Maya Jones", color: "bg-emerald-100", textColor: "text-emerald-700" },
+  {
+    initials: "AK",
+    name: "Alice Kim",
+    color: "bg-blue-100",
+    textColor: "text-blue-700",
+  },
+  {
+    initials: "RS",
+    name: "Raj Singh",
+    color: "bg-orange-100",
+    textColor: "text-orange-700",
+  },
+  {
+    initials: "MJ",
+    name: "Maya Jones",
+    color: "bg-emerald-100",
+    textColor: "text-emerald-700",
+  },
 ];
 
 // ── Component ──────────────────────────────────────────────────────────────
@@ -60,17 +75,17 @@ export function InviteModal({
   const [sending, setSending] = React.useState(false);
   const [sent, setSent] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  
+
   const { data, isLoading } = useGetWorkspaces();
-  
+
   // 🔥 Initialize the email mutation
-  const { mutateAsync: sendInvite } = useSendInvite(); 
+  const { mutateAsync: sendInvite } = useSendInvite();
 
   const inviteLink = data?.documents?.[0]
     ? `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/${data.documents[0].$id}/join/${data.documents[0].inviteCode}`
     : "";
 
-    const workspaceName  = data?.documents?.[0].name
+  const workspaceName = data?.documents?.[0].name;
 
   // Focus email input when modal opens
   React.useEffect(() => {
@@ -109,10 +124,10 @@ export function InviteModal({
       inputRef.current?.focus();
       return;
     }
-    
+
     setEmailError("");
     setSending(true);
-    
+
     try {
       if (onSendInvite) {
         await onSendInvite(email);
@@ -123,7 +138,7 @@ export function InviteModal({
             email: email,
             inviteLink: inviteLink,
             workspaceName: workspaceName,
-          }
+          },
         });
       }
       setSent(true);

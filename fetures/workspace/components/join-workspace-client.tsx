@@ -33,20 +33,19 @@ export default function JoinWorkspaceClient({
     mutate(
       {
         param: { workspace },
-        json: { code:inviteCode},
+        json: { code: inviteCode },
       },
       {
         onSuccess: ({ data }) => {
           router.push(`/dashboard/workspace/${data.$id}`);
         },
-      }
+      },
     );
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-slate-50 to-slate-100">
       <Card className="w-full max-w-md shadow-xl border-0 rounded-2xl backdrop-blur-lg bg-white/80">
-        
         <CardHeader className="text-center space-y-3">
           <div className="mx-auto w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center">
             <Users className="w-6 h-6 text-indigo-600" />
@@ -62,7 +61,6 @@ export default function JoinWorkspaceClient({
         </CardHeader>
 
         <CardContent className="space-y-6">
-          
           <div className="p-5 rounded-xl border bg-white shadow-sm text-center">
             <p className="text-xs text-gray-400 uppercase tracking-wide">
               Workspace
@@ -77,7 +75,6 @@ export default function JoinWorkspaceClient({
           </div>
 
           <div className="flex gap-3">
-            
             <Link href="/dashboard" className="flex-1">
               <Button variant="outline" className="w-full h-11">
                 Cancel

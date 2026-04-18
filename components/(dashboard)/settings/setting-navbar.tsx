@@ -23,21 +23,25 @@ export function SettingNavbar({ user }: Props) {
   const NAV_LINKS = ["Features", "Pricing", "About"];
 
   // Handle smooth scroll and offset for fixed navbar
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, linkName: string) => {
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    linkName: string,
+  ) => {
     e.preventDefault();
     const targetId = linkName.toLowerCase();
     const targetElement = document.getElementById(targetId);
-    
+
     if (targetElement) {
       // Get the element's position and subtract the navbar height (approx 64px / h-16)
-      const offsetTop = targetElement.getBoundingClientRect().top + window.scrollY - 64;
-      
+      const offsetTop =
+        targetElement.getBoundingClientRect().top + window.scrollY - 64;
+
       window.scrollTo({
         top: offsetTop,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
-    
+
     // Close mobile menu after clicking a link
     setMobileOpen(false);
   };
@@ -48,7 +52,7 @@ export function SettingNavbar({ user }: Props) {
         "fixed top-0 inset-x-0 z-50 transition-all duration-300",
         scrolled
           ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100"
-          : "bg-transparent"
+          : "bg-transparent",
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -63,9 +67,7 @@ export function SettingNavbar({ user }: Props) {
         </div>
 
         {/* Nav */}
-        <nav className="hidden md:flex items-center gap-7">
-          
-        </nav>
+        <nav className="hidden md:flex items-center gap-7"></nav>
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-3">
@@ -79,13 +81,8 @@ export function SettingNavbar({ user }: Props) {
               Log in
             </Link>
           )}
-         
         </div>
-
-       
       </div>
-
-     
     </header>
   );
 }
