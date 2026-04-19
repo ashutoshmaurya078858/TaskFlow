@@ -14,8 +14,6 @@ export default async function DashboardLayout({
 
   return (
     // Wrap the entire layout in the Shell
-    <DashboardShell user={safeUser}>
-      {children}
-    </DashboardShell>
+    <DashboardShell user={safeUser}>{children}</DashboardShell>
   );
 }

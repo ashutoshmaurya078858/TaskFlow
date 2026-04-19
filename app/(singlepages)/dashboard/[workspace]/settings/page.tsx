@@ -13,13 +13,13 @@ interface settingsProp {
 const page = async ({ params }: settingsProp) => {
   const user = await getCurrent();
   if (!user) redirect("/sign-in");
-    const { workspace } = await params;
-    const initialValues = await GetOneworkspage({workspaceId:workspace})
+  const { workspace } = await params;
+  const initialValues = await GetOneworkspage({ workspaceId: workspace });
 
   return (
-   <div className="w-full max-w-3xl mx-auto">
-  <EditWorkspaceForm initialValues={initialValues} />
-</div>
+    <div className="w-full max-w-3xl mx-auto">
+      <EditWorkspaceForm initialValues={initialValues} />
+    </div>
   );
 };
 
