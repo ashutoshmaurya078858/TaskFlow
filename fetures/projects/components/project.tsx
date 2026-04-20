@@ -29,7 +29,7 @@ const Projects = () => {
         )}
         {/* Project list */}
         {projects.map((project) => {
-          const href = `/dashboard/workspaces/${workspaceId}/projects/${project.$id}`;
+          const href = `/dashboard/workspace/${workspaceId}/projects/${project.$id}`;
           const isActive = pathname === href;
 
           return (
@@ -40,7 +40,7 @@ const Projects = () => {
                 "flex items-center gap-x-2.5 px-2 py-1.5 rounded-lg text-sm transition-colors group",
                 isActive
                   ? "bg-indigo-50 text-indigo-700 font-medium"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               )}
             >
               {/* Icon */}
@@ -49,7 +49,7 @@ const Projects = () => {
                   "flex items-center justify-center size-7 rounded-md shrink-0 overflow-hidden border",
                   isActive
                     ? "border-indigo-200 bg-indigo-100"
-                    : "border-gray-200 bg-gray-100",
+                    : "border-gray-200 bg-gray-100"
                 )}
               >
                 {project.imageUrl ? (
@@ -65,7 +65,7 @@ const Projects = () => {
                   <FolderOpen
                     className={cn(
                       "size-3.5",
-                      isActive ? "text-indigo-500" : "text-gray-400",
+                      isActive ? "text-indigo-500" : "text-gray-400"
                     )}
                   />
                 )}

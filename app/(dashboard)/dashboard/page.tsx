@@ -6,15 +6,13 @@ import TasksTab from "@/components/(dashboard)/Tab/TasksTab";
 export const dynamic = "force-dynamic";
 
 interface PageProps {
-  searchParams: Promise<{ tab?: string }> | { tab?: string };
+  searchParams: Promise<{ tab?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: PageProps) {
-  // We no longer need to fetch the user here because the layout handles the protection
-  const resolvedParams = await searchParams;
-  const currentTab = resolvedParams?.tab || "home";
+  const { tab } = await searchParams;
+  const currentTab = tab || "home";
 
-  // Just return the active component directly
   switch (currentTab) {
     case "my-tasks":
       return <TasksTab />;
