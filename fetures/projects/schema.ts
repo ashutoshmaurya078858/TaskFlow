@@ -1,5 +1,6 @@
 import { z } from "zod";
-export const createWProjectSchema = z.object({
+
+export const createProjectSchema = z.object({
   name: z.string().trim().min(1, "Required"),
   image: z
     .union([
@@ -7,5 +8,6 @@ export const createWProjectSchema = z.object({
       z.string().transform((value) => (value === "" ? undefined : value)),
     ])
     .optional(),
-  workspaceId: z.string,
+  // FIX: Added () to z.string
+  workspaceId: z.string(), 
 });

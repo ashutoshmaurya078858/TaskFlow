@@ -40,6 +40,9 @@ import { ThemeToggle } from "./theme-toggle";
 import { NAV_ITEMS, PROJECTS } from "@/lib/dashboard";
 import { WorkspaceSwitcher } from "./workspace-swicher";
 import Project from "@/fetures/projects/components/project";
+import { CreateProjectModal } from "@/fetures/projects/components/project-model";
+
+
 
 interface AppSidebarProps {
   user: any;
@@ -48,6 +51,9 @@ interface AppSidebarProps {
 export function AppSidebar({ user }: AppSidebarProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+
+
   
   // 2. Extract the current path and dynamic workspace ID from the URL
   const pathname = usePathname();
@@ -72,6 +78,12 @@ export function AppSidebar({ user }: AppSidebarProps) {
   }, [user]);
 
   return (
+    <>
+    <CreateProjectModal
+        workspaceId={workspaceId}
+        open={open}
+        onOpenChange={setOpen}
+      />
     <Sidebar
       collapsible="icon"
       className="bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100"
@@ -154,7 +166,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarGroupAction title="Add project">
-            <Plus className="h-3.5 w-3.5" />
+            <Plus className="h-3.5 w-3.5" onClick={() => setOpen(true)}/>
           </SidebarGroupAction>
           <SidebarMenu>
             <Project/>
@@ -232,5 +244,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </div>
       </SidebarFooter>
     </Sidebar>
+    </>
   );
 }
