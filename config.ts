@@ -3,3 +3,4 @@ export const WORKSPACES_ID = process.env.NEXT_PUBLIC_APP_APPWRITE_COLLECTION_ID!
 export const BUCKETID = process.env.NEXT_PUBLIC_APP_APPWRITE_BUCKETID!;
 export const MEMBER_ID = process.env.NEXT_PUBLIC_APP_APPWRITE_MEMBERS_ID!;
 export const PROJECT_ID = process.env.NEXT_PUBLIC_APP_APPWRITE_PROJECT_ID!;
+export const TASKS_ID = process.env.NEXT_PUBLIC_APP_APPWRITE_TASK_ID!;

@@ -1,5 +1,6 @@
 import { ProjectHeader } from "@/fetures/projects/components/ProjectHeader";
 import { GetProjects } from "@/fetures/projects/quaries";
+import TaskView from "@/fetures/tasks/components/task-view";
 import { redirect } from "next/navigation";
 
 interface PageProps {
@@ -29,6 +30,8 @@ const ProjectPage = async ({ params }: PageProps) => {
       <hr className="border-gray-100" />
 
       {/* Page content goes here */}
+
+      <TaskView/>
       <div className="text-sm text-gray-400">
         Project content coming soon...
       </div>
