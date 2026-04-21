@@ -1,42 +1,94 @@
 "use client";
 
 import { useState } from "react";
-import { Table2, LayoutGrid, Calendar, Plus } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { Table2, LayoutGrid, Calendar, Plus, Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useWorkspaceId } from "@/fetures/workspace/hookes/use-workspace-id";
-import { useParams } from "next/navigation";
-import { CreateTaskModal } from "./CreateTaskModal";
-import { useGetMembers } from "@/fetures/members/api/use-get-members";
 
+import { useWorkspaceId } from "@/fetures/workspace/hookes/use-workspace-id";
+import { useGetMembers } from "@/fetures/members/api/use-get-members";
+import { useGetTask } from "../hookes/use-get-task";
+import { Task } from "../types";
+
+import { CreateTaskModal } from "./CreateTaskModal";
+import { EditTaskModal } from "./EditTaskModal";
+import { TableView } from "./TableView";
+import { KanbanView } from "./KanbanView";
+import { CalendarView } from "./Calendarview";
+import { ConfirmDeleteTaskDialog } from "./ConfirmDeleteTaskDialog";
+
+// --- Types & Constants ---
 type TabType = "table" | "kanban" | "calendar";
 
-const TABS: { id: TabType; label: string; icon: React.ReactNode }[] = [
-  { id: "table", label: "Table", icon: <Table2 className="size-3.5" /> },
-  { id: "kanban", label: "Kanban", icon: <LayoutGrid className="size-3.5" /> },
-  {
-    id: "calendar",
-    label: "Calendar",
-    icon: <Calendar className="size-3.5" />,
-  },
-];
-
 interface Member {
-  $id: string; // Appwrite uses $id
+  $id: string;
   name: string;
   email: string;
 }
 
-const TaskView = () => {
+const TABS: { id: TabType; label: string; icon: React.ReactNode }[] = [
+  { id: "table", label: "Table", icon: <Table2 className="size-3.5" /> },
+  { id: "kanban", label: "Kanban", icon: <LayoutGrid className="size-3.5" /> },
+  { id: "calendar", label: "Calendar", icon: <Calendar className="size-3.5" /> },
+];
+
+export default function TaskView() {
+  const router = useRouter();
+  const params = useParams();
+  const workspaceId = useWorkspaceId();
+  const projectId = params?.projectId as string | undefined;
+
+  // --- State ---
   const [activeTab, setActiveTab] = useState<TabType>("table");
   const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const workspaceId = useWorkspaceId();
-  const params = useParams();
-  const projectId = params?.projectId as string | undefined;
-  const { data } = useGetMembers({ workspaceId });
-  const members = (data?.populateMembers as unknown as Member[]) || [];
+  // --- Data Fetching ---
+  const { data: membersData } = useGetMembers({ workspaceId });
+  const { data: tasksData, isLoading: isLoadingTasks } = useGetTask({ workspaceId });
 
+  // --- Safe Data Fallbacks ---
+  const members = (membersData?.populateMembers as unknown as Member[]) ?? [];
+  const tasks = (tasksData?.documents as unknown as Task[]) ?? [];
+
+  // --- Handlers ---
+  const handleEdit = (task: Task) => {
+    setSelectedTask(task);
+    setEditOpen(true);
+  };
+
+  const handleDelete = (task: Task) => {
+    setSelectedTask(task);
+    setDeleteOpen(true);
+  };
+
+  const handleOpenTask = (task: Task) => {
+    router.push(`/dashboard/workspace/${workspaceId}/tasks/${task.$id}`);
+  };
+
+  // STRICT STATE MANAGEMENT: Clear the selected task when closing modals
+  const handleCloseEdit = (open: boolean) => {
+    setEditOpen(open);
+    if (!open) setTimeout(() => setSelectedTask(null), 300); // Wait for transition
+  };
+
+  const handleCloseDelete = (open: boolean) => {
+    setDeleteOpen(open);
+    if (!open) setTimeout(() => setSelectedTask(null), 300);
+  };
+
+  // GUARD: Do not render anything until workspaceId is successfully resolved
+  if (!workspaceId) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="size-6 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -48,10 +100,22 @@ const TaskView = () => {
         members={members}
       />
 
+      <EditTaskModal
+        open={editOpen}
+        onOpenChange={handleCloseEdit}
+        task={selectedTask}
+        members={members}
+      />
+
+      <ConfirmDeleteTaskDialog
+        open={deleteOpen}
+        onOpenChange={handleCloseDelete}
+        task={selectedTask}
+      />
+
       <div className="flex flex-col gap-4">
-        {/* Top bar */}
+        {/* Header Controls */}
         <div className="flex items-center justify-between">
-          {/* View Tabs */}
           <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
             {TABS.map((tab) => (
               <button
@@ -61,7 +125,7 @@ const TaskView = () => {
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                   activeTab === tab.id
                     ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700",
+                    : "text-gray-500 hover:text-gray-700"
                 )}
               >
                 {tab.icon}
@@ -70,7 +134,6 @@ const TaskView = () => {
             ))}
           </div>
 
-          {/* New Task Button */}
           <Button
             size="sm"
             onClick={() => setCreateOpen(true)}
@@ -83,27 +146,21 @@ const TaskView = () => {
 
         <hr className="border-gray-100" />
 
-        {/* Tab Content */}
-        <div>
+        {/* View Rendering */}
+        <div className="min-h-[400px]">
           {activeTab === "table" && (
-            <div className="text-sm text-gray-400">
-              Table view coming soon...
-            </div>
+            <TableView
+              tasks={tasks}
+              isLoading={isLoadingTasks}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onView={handleOpenTask}
+            />
           )}
-          {activeTab === "kanban" && (
-            <div className="text-sm text-gray-400">
-              Kanban view coming soon...
-            </div>
-          )}
-          {activeTab === "calendar" && (
-            <div className="text-sm text-gray-400">
-              Calendar view coming soon...
-            </div>
-          )}
+          {activeTab === "kanban" && <KanbanView tasks={tasks} isLoading={isLoadingTasks} />}
+          {activeTab === "calendar" && <CalendarView tasks={tasks} isLoading={isLoadingTasks} />}
         </div>
       </div>
     </>
   );
-};
-
-export default TaskView;
+}

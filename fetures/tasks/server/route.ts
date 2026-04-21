@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createTaskSchemas } from "../schemas";
 import { getmember } from "@/fetures/members/utils";
-import { DATABASE_ID, PROJECT_ID, TASKS_ID } from "@/config";
+import { DATABASE_ID, MEMBER_ID, PROJECT_ID, TASKS_ID } from "@/config";
 import { ID, Query } from "node-appwrite";
 import z from "zod";
 import { TaskStatus } from "../types";
@@ -83,7 +83,7 @@ const app = new Hono()
 
       const members = await databases.listDocuments(
         DATABASE_ID,
-        PROJECT_ID,
+        MEMBER_ID, // ← correct
         assigneeIds.length > 0 ? [Query.contains("$id", assigneeIds)] : [],
       );
       const assignees = await Promise.all(
@@ -162,9 +162,9 @@ const app = new Hono()
           ? highestPositionTask.documents[0].position + 1000
           : 1000;
 
-     const task = await databases.createDocument(
+      const task = await databases.createDocument(
         DATABASE_ID,
-        TASKS_ID,        // <-- THIS was PROJECT_ID, causing the error
+        TASKS_ID, // <-- THIS was PROJECT_ID, causing the error
         ID.unique(),
         {
           name,
@@ -179,6 +179,78 @@ const app = new Hono()
       );
       return c.json({ data: task });
     },
-  );
+  )
+
+  // 👇 NEW UPDATE (PATCH) ROUTE 👇
+  .patch(
+    "/:taskId",
+    sessionMiddleware,
+    // Note: Assuming you have an updateTaskSchemas, or using .partial() if createTaskSchemas is a Zod object
+    zValidator("json", createTaskSchemas.partial()),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { taskId } = c.req.param();
+      const updates = c.req.valid("json");
+
+      // 1. Fetch the existing task to get the workspaceId
+      const existingTask = await databases.getDocument(
+        DATABASE_ID,
+        TASKS_ID,
+        taskId,
+      );
+
+      // 2. Verify authorization
+      const member = await getmember({
+        databases,
+        userId: user.$id,
+        workspaceId: existingTask.workspaceId,
+      });
+
+      if (!member) {
+        return c.json({ error: "unauthorized" }, 401);
+      }
+
+      // 3. Perform the update
+      const updatedTask = await databases.updateDocument(
+        DATABASE_ID,
+        TASKS_ID,
+        taskId,
+        updates,
+      );
+
+      return c.json({ data: updatedTask });
+    },
+  )
+  // 👇 NEW DELETE ROUTE 👇
+  .delete("/:taskId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { taskId } = c.req.param();
+
+    // 1. Fetch the existing task to get the workspaceId
+    const existingTask = await databases.getDocument(
+      DATABASE_ID,
+      TASKS_ID,
+      taskId,
+    );
+
+    // 2. Verify authorization
+    const member = await getmember({
+      databases,
+      userId: user.$id,
+      workspaceId: existingTask.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "unauthorized" }, 401);
+    }
+
+    // 3. Delete the task
+    await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+
+    // Return the ID of the deleted task so the frontend can remove it from state
+    return c.json({ data: { $id: taskId } });
+  });
 
 export default app;

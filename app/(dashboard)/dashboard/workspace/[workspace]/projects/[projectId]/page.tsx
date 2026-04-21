@@ -35,9 +35,7 @@ const ProjectPage = async ({ params }: PageProps) => {
       {/* Page content goes here */}
 
       <TaskView/>
-      <div className="text-sm text-gray-400">
-        Project content coming soon...
-      </div>
+      
     </div>
   );
 };
