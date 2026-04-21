@@ -11,3 +11,15 @@ export const createProjectSchema = z.object({
   // FIX: Added () to z.string
   workspaceId: z.string(), 
 });
+
+
+export const UpdateProjectSchema = z.object({
+  name: z.string().trim().min(1, "Required").optional(),
+  image: z
+    .union([
+      z.instanceof(File),
+      z.string().transform((value) => (value === "" ? undefined : value)),
+    ])
+    .optional(),
+  // FIX: Added () to z.string
+});

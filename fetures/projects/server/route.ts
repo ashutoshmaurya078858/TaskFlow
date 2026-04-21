@@ -5,7 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ID, Query } from "node-appwrite";
 import z from "zod";
-import { createProjectSchema } from "../schema";
+import { createProjectSchema, UpdateProjectSchema } from "../schema";
 
 const app = new Hono()
   .get(
@@ -81,6 +81,61 @@ const app = new Hono()
 
     return c.json({ data: project });
   },
-);
+)
+.patch(
+  "/:projectId",
+  sessionMiddleware,
+  zValidator("form", UpdateProjectSchema.partial({ name: true, image: true})),
+  async (c) => {
+    const databases = c.get("databases");
+    const storage = c.get("storage");
+    const user = c.get("user");
+    const { projectId } = c.req.param();
+    const { name, image } = c.req.valid("form");
+
+    // 1. Fetch existing project
+    const existingProject = await databases.getDocument(
+      DATABASE_ID,
+      PROJECT_ID,
+      projectId,
+    );
+
+    if (!existingProject) {
+      return c.json({ error: "Project not found" }, 404);
+    }
+
+    // 2. Verify membership
+    const member = await getmember({
+      databases,
+      workspaceId: existingProject.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    let uploadedImageUrl: string | undefined = existingProject.imageUrl;
+
+    // 3. Upload new image if provided
+    if (image instanceof File) {
+      const file = await storage.createFile(BUCKETID, ID.unique(), image);
+      uploadedImageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${BUCKETID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APP_APPWRITE_PROJECT}`;
+    }
+
+    // 4. Update the project
+    const project = await databases.updateDocument(
+      DATABASE_ID,
+      PROJECT_ID,
+      projectId,
+      {
+        ...(name && { name }),
+        imageUrl: uploadedImageUrl,
+      },
+    );
+
+    return c.json({ data: project });
+  },
+)
 
 export default app;
