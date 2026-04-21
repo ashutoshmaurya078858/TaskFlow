@@ -1,5 +1,5 @@
 import "server-only"
-import { Client, Account } from "node-appwrite";
+import { Client, Account, Users } from "node-appwrite";
 
 // Admin client, used to create new accounts
 export function createAdminClient() {
@@ -12,6 +12,9 @@ export function createAdminClient() {
   return {
     get account() {
       return new Account(client);
+    },
+     get users() {
+      return new Users(client); // ← was Account, should be Users
     },
   };
 }
