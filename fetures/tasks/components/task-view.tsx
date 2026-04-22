@@ -31,7 +31,11 @@ interface Member {
 const TABS: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: "table", label: "Table", icon: <Table2 className="size-3.5" /> },
   { id: "kanban", label: "Kanban", icon: <LayoutGrid className="size-3.5" /> },
-  { id: "calendar", label: "Calendar", icon: <Calendar className="size-3.5" /> },
+  {
+    id: "calendar",
+    label: "Calendar",
+    icon: <Calendar className="size-3.5" />,
+  },
 ];
 
 export default function TaskView() {
@@ -49,7 +53,9 @@ export default function TaskView() {
 
   // --- Data Fetching ---
   const { data: membersData } = useGetMembers({ workspaceId });
-  const { data: tasksData, isLoading: isLoadingTasks } = useGetTask({ workspaceId });
+  const { data: tasksData, isLoading: isLoadingTasks } = useGetTask({
+    workspaceId,
+  });
 
   // --- Safe Data Fallbacks ---
   const members = (membersData?.populateMembers as unknown as Member[]) ?? [];
@@ -125,7 +131,7 @@ export default function TaskView() {
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                   activeTab === tab.id
                     ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
+                    : "text-gray-500 hover:text-gray-700",
                 )}
               >
                 {tab.icon}
@@ -157,8 +163,12 @@ export default function TaskView() {
               onView={handleOpenTask}
             />
           )}
-          {activeTab === "kanban" && <KanbanView tasks={tasks} isLoading={isLoadingTasks} />}
-          {activeTab === "calendar" && <CalendarView tasks={tasks} isLoading={isLoadingTasks} />}
+          {activeTab === "kanban" && (
+            <KanbanView tasks={tasks} isLoading={isLoadingTasks} />
+          )}
+          {activeTab === "calendar" && (
+            <CalendarView tasks={tasks} isLoading={isLoadingTasks} />
+          )}
         </div>
       </div>
     </>

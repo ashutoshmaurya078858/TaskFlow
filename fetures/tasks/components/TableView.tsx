@@ -17,8 +17,21 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -55,15 +68,29 @@ const COLUMNS: { key: SortField; label: string }[] = [
 // ============================================================================
 
 function Avatar({ name }: { name?: string }) {
-  const initials = name?.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() ?? "?";
+  const initials =
+    name
+      ?.split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() ?? "?";
   const palettes = [
-    "bg-violet-100 text-violet-700", "bg-blue-100 text-blue-700",
-    "bg-emerald-100 text-emerald-700", "bg-amber-100 text-amber-700", "bg-rose-100 text-rose-700",
+    "bg-violet-100 text-violet-700",
+    "bg-blue-100 text-blue-700",
+    "bg-emerald-100 text-emerald-700",
+    "bg-amber-100 text-amber-700",
+    "bg-rose-100 text-rose-700",
   ];
   const color = palettes[(name?.charCodeAt(0) ?? 0) % palettes.length];
 
   return (
-    <span className={cn("inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-semibold shrink-0", color)}>
+    <span
+      className={cn(
+        "inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-semibold shrink-0",
+        color,
+      )}
+    >
       {initials}
     </span>
   );
@@ -72,7 +99,14 @@ function Avatar({ name }: { name?: string }) {
 function StatusBadge({ status }: { status: TaskStatus }) {
   const c = STATUS_COLORS[status];
   return (
-    <Badge variant="outline" className={cn("inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border-0", c?.bg, c?.text)}>
+    <Badge
+      variant="outline"
+      className={cn(
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border-0",
+        c?.bg,
+        c?.text,
+      )}
+    >
       <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", c?.dot)} />
       {STATUS_LABELS[status] || "Unknown"}
     </Badge>
@@ -83,7 +117,8 @@ function DueDateCell({ date }: { date: string | undefined | null }) {
   if (!date) return <span className="text-gray-400 text-sm">—</span>;
 
   const d = new Date(date);
-  if (!isValid(d)) return <span className="text-gray-400 text-sm">Invalid Date</span>;
+  if (!isValid(d))
+    return <span className="text-gray-400 text-sm">Invalid Date</span>;
 
   const isOverdue = isPast(d) && !isToday(d);
   const isDateToday = isToday(d);
@@ -96,46 +131,104 @@ function DueDateCell({ date }: { date: string | undefined | null }) {
         isOverdue && "text-red-500",
         isDateToday && "text-amber-500",
         isDateTomorrow && "text-blue-500",
-        !isOverdue && !isDateToday && !isDateTomorrow && "text-gray-600"
+        !isOverdue && !isDateToday && !isDateTomorrow && "text-gray-600",
       )}
     >
       {isOverdue && <AlertCircle className="w-3.5 h-3.5 shrink-0" />}
       {format(d, "MMM d, yyyy")}
-      {isDateToday && <span className="text-[10px] font-semibold bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full">Today</span>}
-      {isDateTomorrow && <span className="text-[10px] font-semibold bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full">Tomorrow</span>}
-      {isOverdue && <span className="text-[10px] font-semibold bg-red-100 text-red-500 px-1.5 py-0.5 rounded-full">Overdue</span>}
+      {isDateToday && (
+        <span className="text-[10px] font-semibold bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-full">
+          Today
+        </span>
+      )}
+      {isDateTomorrow && (
+        <span className="text-[10px] font-semibold bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full">
+          Tomorrow
+        </span>
+      )}
+      {isOverdue && (
+        <span className="text-[10px] font-semibold bg-red-100 text-red-500 px-1.5 py-0.5 rounded-full">
+          Overdue
+        </span>
+      )}
     </span>
   );
 }
 
-function SortIcon({ field, active, dir }: { field: string; active: string; dir: SortDir }) {
-  if (active !== field) return <ArrowUpDown className="size-3 text-gray-300 ml-1" />;
-  return dir === "asc" ? <ArrowUp className="size-3 text-indigo-500 ml-1" /> : <ArrowDown className="size-3 text-indigo-500 ml-1" />;
+function SortIcon({
+  field,
+  active,
+  dir,
+}: {
+  field: string;
+  active: string;
+  dir: SortDir;
+}) {
+  if (active !== field)
+    return <ArrowUpDown className="size-3 text-gray-300 ml-1" />;
+  return dir === "asc" ? (
+    <ArrowUp className="size-3 text-indigo-500 ml-1" />
+  ) : (
+    <ArrowDown className="size-3 text-indigo-500 ml-1" />
+  );
 }
 
-function RowActions({ task, onEdit, onDelete, onView }: { task: Task; onEdit?: (t: Task) => void; onDelete?: (t: Task) => void; onView?: (t: Task) => void; }) {
+function RowActions({
+  task,
+  onEdit,
+  onDelete,
+  onView,
+}: {
+  task: Task;
+  onEdit?: (t: Task) => void;
+  onDelete?: (t: Task) => void;
+  onView?: (t: Task) => void;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8 opacity-0 group-hover:opacity-100 focus:opacity-100 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 opacity-0 group-hover:opacity-100 focus:opacity-100 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
+        >
           <MoreHorizontal className="size-4" />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44 bg-white">
         {onView && (
-          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onView(task); }} className="cursor-pointer text-sm">
-            <ClipboardList className="size-3.5 mr-2 text-gray-400" /> View details
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onView(task);
+            }}
+            className="cursor-pointer text-sm"
+          >
+            <ClipboardList className="size-3.5 mr-2 text-gray-400" /> View
+            details
           </DropdownMenuItem>
         )}
         {onEdit && (
-          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(task); }} className="cursor-pointer text-sm">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(task);
+            }}
+            className="cursor-pointer text-sm"
+          >
             <Pencil className="size-3.5 mr-2 text-gray-400" /> Edit task
           </DropdownMenuItem>
         )}
         {(onView || onEdit) && onDelete && <DropdownMenuSeparator />}
         {onDelete && (
-          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(task); }} className="cursor-pointer text-sm text-red-600 focus:text-red-600 focus:bg-red-50">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(task);
+            }}
+            className="cursor-pointer text-sm text-red-600 focus:text-red-600 focus:bg-red-50"
+          >
             <Trash2 className="size-3.5 mr-2" /> Delete task
           </DropdownMenuItem>
         )}
@@ -148,7 +241,13 @@ function RowActions({ task, onEdit, onDelete, onView }: { task: Task; onEdit?: (
 // Main Table Component
 // ============================================================================
 
-export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: TableViewProps) {
+export function TableView({
+  tasks = [],
+  isLoading,
+  onEdit,
+  onDelete,
+  onView,
+}: TableViewProps) {
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("dueDate");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -173,7 +272,7 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
       (t) =>
         t.name?.toLowerCase().includes(query) ||
         t.assignee?.name?.toLowerCase().includes(query) ||
-        t.project?.name?.toLowerCase().includes(query)
+        t.project?.name?.toLowerCase().includes(query),
     );
   }, [tasks, search]);
 
@@ -193,10 +292,14 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
           comparison = aTime - bTime;
           break;
         case "assignee":
-          comparison = (a.assignee?.name || "").localeCompare(b.assignee?.name || "");
+          comparison = (a.assignee?.name || "").localeCompare(
+            b.assignee?.name || "",
+          );
           break;
         case "project":
-          comparison = (a.project?.name || "").localeCompare(b.project?.name || "");
+          comparison = (a.project?.name || "").localeCompare(
+            b.project?.name || "",
+          );
           break;
       }
       return sortDir === "asc" ? comparison : -comparison;
@@ -204,7 +307,10 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
   }, [filteredTasks, sortField, sortDir]);
 
   const totalPages = Math.max(1, Math.ceil(sortedTasks.length / PAGE_SIZE));
-  const paginatedTasks = sortedTasks.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginatedTasks = sortedTasks.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
 
   // --- Rendering ---
   if (isLoading) {
@@ -224,7 +330,9 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-600">No tasks yet</p>
-          <p className="text-xs text-gray-400 mt-0.5">Create your first task to get started</p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Create your first task to get started
+          </p>
         </div>
       </div>
     );
@@ -247,7 +355,8 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
           />
         </div>
         <p className="text-xs text-gray-400 shrink-0">
-          {filteredTasks.length} of {tasks.length} task{tasks.length !== 1 ? "s" : ""}
+          {filteredTasks.length} of {tasks.length} task
+          {tasks.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -264,7 +373,11 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                 >
                   <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-gray-500 uppercase tracking-wide hover:text-gray-700 transition-colors">
                     {col.label}
-                    <SortIcon field={col.key} active={sortField} dir={sortDir} />
+                    <SortIcon
+                      field={col.key}
+                      active={sortField}
+                      dir={sortDir}
+                    />
                   </span>
                 </TableHead>
               ))}
@@ -275,7 +388,10 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
           <TableBody>
             {paginatedTasks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="py-12 text-center text-sm text-gray-400">
+                <TableCell
+                  colSpan={6}
+                  className="py-12 text-center text-sm text-gray-400"
+                >
                   No tasks match your search.
                 </TableCell>
               </TableRow>
@@ -291,7 +407,9 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                       {task.name}
                     </p>
                     {task.description && (
-                      <p className="text-xs text-gray-400 truncate mt-0.5">{task.description}</p>
+                      <p className="text-xs text-gray-400 truncate mt-0.5">
+                        {task.description}
+                      </p>
                     )}
                   </TableCell>
 
@@ -303,10 +421,14 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                     {task.assignee ? (
                       <div className="flex items-center gap-2">
                         <Avatar name={task.assignee.name} />
-                        <span className="text-sm text-gray-700">{task.assignee.name}</span>
+                        <span className="text-sm text-gray-700">
+                          {task.assignee.name}
+                        </span>
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400 italic">Unassigned</span>
+                      <span className="text-xs text-gray-400 italic">
+                        Unassigned
+                      </span>
                     )}
                   </TableCell>
 
@@ -326,7 +448,12 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                   </TableCell>
 
                   <TableCell className="px-2 py-3.5 text-right">
-                    <RowActions task={task} onEdit={onEdit} onDelete={onDelete} onView={onView} />
+                    <RowActions
+                      task={task}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                      onView={onView}
+                    />
                   </TableCell>
                 </TableRow>
               ))
@@ -352,7 +479,9 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
               </button>
 
               {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                .filter(
+                  (p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1,
+                )
                 .reduce<(number | "...")[]>((acc, p, i, arr) => {
                   if (i > 0 && p - (arr[i - 1] as number) > 1) acc.push("...");
                   acc.push(p);
@@ -360,7 +489,12 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                 }, [])
                 .map((p, i) =>
                   p === "..." ? (
-                    <span key={`dots-${i}`} className="text-xs text-gray-400 px-1">…</span>
+                    <span
+                      key={`dots-${i}`}
+                      className="text-xs text-gray-400 px-1"
+                    >
+                      …
+                    </span>
                   ) : (
                     <button
                       key={p}
@@ -369,12 +503,12 @@ export function TableView({ tasks = [], isLoading, onEdit, onDelete, onView }: T
                         "w-7 h-7 rounded-md text-xs font-medium transition-colors",
                         page === p
                           ? "bg-indigo-600 text-white"
-                          : "text-gray-500 hover:bg-white border border-gray-200 hover:text-gray-700"
+                          : "text-gray-500 hover:bg-white border border-gray-200 hover:text-gray-700",
                       )}
                     >
                       {p}
                     </button>
-                  )
+                  ),
                 )}
 
               <button

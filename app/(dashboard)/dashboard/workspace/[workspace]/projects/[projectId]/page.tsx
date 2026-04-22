@@ -10,14 +10,11 @@ interface PageProps {
   }>;
 }
 
-
 const ProjectPage = async ({ params }: PageProps) => {
   const { workspace, projectId } = await params;
   const project = await GetProjects({ projectId });
 
-
   if (!project) redirect(`/dashboard/workspace/${workspace}`);
-
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,8 +31,7 @@ const ProjectPage = async ({ params }: PageProps) => {
 
       {/* Page content goes here */}
 
-      <TaskView/>
-      
+      <TaskView />
     </div>
   );
 };
