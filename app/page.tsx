@@ -12,7 +12,7 @@ import { TrustedBy } from "@/components/(homepage)/trusted-by";
 
 import { getCurrent } from "@/fetures/auth/action";
 // ✅ import your own footer instead
-
+export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const user = await getCurrent();
   const safeUser = JSON.parse(JSON.stringify(user));
