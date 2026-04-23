@@ -15,7 +15,7 @@ import {
 
 export default function InviteEmail({
   workspaceName,
-  inviteLink ,
+  inviteLink,
   inviterName = "Someone",
 }: {
   workspaceName: string;
@@ -54,38 +54,23 @@ export default function InviteEmail({
       <Body style={body}>
         {/* Outer wrapper */}
         <Container style={outerContainer}>
-
           {/* Top accent bar */}
           <Section style={accentBar} />
 
           {/* Logo + brand */}
           <Section style={brandSection}>
-            <table style={{ width: "100%" }} cellPadding={0} cellSpacing={0}>
-              <tbody>
-                <tr>
-                  <td style={{ textAlign: "center" }}>
-                    <table
-                      style={{ display: "inline-table" }}
-                      cellPadding={0}
-                      cellSpacing={0}
-                    >
-                      <tbody>
-                        <tr>
-                          <td>
-                            <div style={logoMark}>
-                              <span style={logoMarkText}>F</span>
-                            </div>
-                          </td>
-                          <td style={{ paddingLeft: "8px", verticalAlign: "middle" }}>
-                            <Text style={brandName}>FlowTask</Text>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <Img
+              src="https://res.cloudinary.com/dk52yi0f5/image/upload/v1776924155/logo_jw9fow.svg"
+              alt="FlowTask"
+              width="170"
+              height="80"
+              style={{
+                display: "block",
+                margin: "0 auto",
+                maxWidth: "100%",
+                height: "auto",
+              }}
+            />
           </Section>
 
           {/* Hero section */}
@@ -99,21 +84,29 @@ export default function InviteEmail({
               <tbody>
                 <tr>
                   <td style={{ textAlign: "center" }}>
-                    {["#e0e7ff", "#c7d2fe", "#a5b4fc", "#818cf8", "#6366f1", "#818cf8", "#a5b4fc", "#c7d2fe", "#e0e7ff"].map(
-                      (color, i) => (
-                        <span
-                          key={i}
-                          style={{
-                            display: "inline-block",
-                            width: "6px",
-                            height: "6px",
-                            borderRadius: "50%",
-                            backgroundColor: color,
-                            margin: "0 3px",
-                          }}
-                        />
-                      )
-                    )}
+                    {[
+                      "#e0e7ff",
+                      "#c7d2fe",
+                      "#a5b4fc",
+                      "#818cf8",
+                      "#6366f1",
+                      "#818cf8",
+                      "#a5b4fc",
+                      "#c7d2fe",
+                      "#e0e7ff",
+                    ].map((color, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          display: "inline-block",
+                          width: "6px",
+                          height: "6px",
+                          borderRadius: "50%",
+                          backgroundColor: color,
+                          margin: "0 3px",
+                        }}
+                      />
+                    ))}
                   </td>
                 </tr>
               </tbody>
@@ -127,9 +120,9 @@ export default function InviteEmail({
 
             <Text style={heroSubtitle}>
               {inviterName} has invited you to collaborate on{" "}
-              <strong style={{ color: "#1e1b4b" }}>{workspaceName}</strong>. 
-              FlowTask helps your team move faster — manage tasks, track progress, 
-              and ship together.
+              <strong style={{ color: "#1e1b4b" }}>{workspaceName}</strong>.
+              FlowTask helps your team move faster — manage tasks, track
+              progress, and ship together.
             </Text>
           </Section>
 
@@ -138,20 +131,21 @@ export default function InviteEmail({
             <Button href={inviteLink} style={ctaButton}>
               Accept Invitation →
             </Button>
-            <Text style={ctaNote}>
-              This invitation expires in 7 days
-            </Text>
+            <Text style={ctaNote}>This invitation expires in 7 days</Text>
           </Section>
 
           {/* Feature pills */}
           <Section style={pillsSection}>
-            {["Task Boards", "Team Chat", "Progress Tracking", "Integrations"].map(
-              (feature) => (
-                <span key={feature} style={pill}>
-                  {feature}
-                </span>
-              )
-            )}
+            {[
+              "Task Boards",
+              "Team Chat",
+              "Progress Tracking",
+              "Integrations",
+            ].map((feature) => (
+              <span key={feature} style={pill}>
+                {feature}
+              </span>
+            ))}
           </Section>
 
           <Hr style={divider} />
@@ -221,8 +215,10 @@ const accentBar: React.CSSProperties = {
 };
 
 const brandSection: React.CSSProperties = {
-  padding: "24px 40px 0",
-  textAlign: "center",
+  display: "block",
+  margin: "0 auto",
+  maxWidth: "140px",
+  height: "auto",
 };
 
 const logoMark: React.CSSProperties = {

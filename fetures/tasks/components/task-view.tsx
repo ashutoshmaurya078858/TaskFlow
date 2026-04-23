@@ -15,9 +15,10 @@ import { Task } from "../types";
 import { CreateTaskModal } from "./CreateTaskModal";
 import { EditTaskModal } from "./EditTaskModal";
 import { TableView } from "./TableView";
-import { KanbanView } from "./KanbanView";
+import { KanbanView, TaskUpdatePayload } from "./KanbanView"; // ← TaskUpdatePayload added
 import { CalendarView } from "./Calendarview";
 import { ConfirmDeleteTaskDialog } from "./ConfirmDeleteTaskDialog";
+import { useUpdateTask } from "../hookes/use-update-task";
 
 // --- Types & Constants ---
 type TabType = "table" | "kanban" | "calendar";
@@ -57,6 +58,9 @@ export default function TaskView() {
     workspaceId,
   });
 
+  // --- Mutations ---
+  const { mutate: updateTask } = useUpdateTask(); // ← NEW
+
   // --- Safe Data Fallbacks ---
   const members = (membersData?.populateMembers as unknown as Member[]) ?? [];
   const tasks = (tasksData?.documents as unknown as Task[]) ?? [];
@@ -76,15 +80,24 @@ export default function TaskView() {
     router.push(`/dashboard/workspace/${workspaceId}/tasks/${task.$id}`);
   };
 
-  // STRICT STATE MANAGEMENT: Clear the selected task when closing modals
   const handleCloseEdit = (open: boolean) => {
     setEditOpen(open);
-    if (!open) setTimeout(() => setSelectedTask(null), 300); // Wait for transition
+    if (!open) setTimeout(() => setSelectedTask(null), 300);
   };
 
   const handleCloseDelete = (open: boolean) => {
     setDeleteOpen(open);
     if (!open) setTimeout(() => setSelectedTask(null), 300);
+  };
+
+  // ← NEW: fires after every kanban drag-drop
+  const handleKanbanChange = (updates: TaskUpdatePayload[]) => {
+    updates.forEach(({ $id, status, position }) => {
+      updateTask({
+        param: { taskId: $id },
+        json: { status, position },
+      });
+    });
   };
 
   // GUARD: Do not render anything until workspaceId is successfully resolved
@@ -164,7 +177,11 @@ export default function TaskView() {
             />
           )}
           {activeTab === "kanban" && (
-            <KanbanView tasks={tasks} isLoading={isLoadingTasks} />
+            <KanbanView
+              tasks={tasks}
+              isLoading={isLoadingTasks}
+              onChange={handleKanbanChange} // ← NEW
+            />
           )}
           {activeTab === "calendar" && (
             <CalendarView tasks={tasks} isLoading={isLoadingTasks} />
