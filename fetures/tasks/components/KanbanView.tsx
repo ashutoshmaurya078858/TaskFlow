@@ -179,7 +179,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="overflow-x-auto pb-4">
+      <div className="overflow-x-auto pb-4 min-h-125">
         <div className="flex gap-4 min-w-max">
           {COLUMN_ORDER.map((status) => {
             const colTasks = boardData[status];
