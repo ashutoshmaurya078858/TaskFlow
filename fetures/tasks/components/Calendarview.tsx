@@ -292,7 +292,7 @@ export function CalendarView({ tasks, isLoading }: CalendarViewProps) {
               <div
                 key={key}
                 className={cn(
-                  "min-h-[100px] p-2 flex flex-col gap-1 transition-colors",
+                  "min-h-25 p-2 flex flex-col gap-1 transition-colors",
                   inMonth ? "bg-white hover:bg-gray-50/50" : "bg-gray-50/40",
                   todayDay && "bg-indigo-50/30 hover:bg-indigo-50/50",
                 )}

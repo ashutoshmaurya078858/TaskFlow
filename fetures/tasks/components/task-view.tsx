@@ -166,7 +166,7 @@ export default function TaskView() {
         <hr className="border-gray-100" />
 
         {/* View Rendering */}
-        <div className="min-h-[400px]">
+        <div className="min-h-100">
           {activeTab === "table" && (
             <TableView
               tasks={tasks}

@@ -192,7 +192,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     className={cn(
-                      "flex flex-col gap-3 min-w-[260px] w-[260px] rounded-xl p-1.5 transition-colors",
+                      "flex flex-col gap-3 min-w-65 w-65 rounded-xl p-1.5 transition-colors",
                       snapshot.isDraggingOver ? "bg-gray-50" : "bg-transparent"
                     )}
                   >
@@ -216,7 +216,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
                     </div>
 
                     {/* Draggable Cards Area */}
-                    <div className="flex flex-col gap-2.5 min-h-[150px]">
+                    <div className="flex flex-col gap-2.5 min-h-37.5">
                       {colTasks.length === 0 && !snapshot.isDraggingOver && (
                         <div className="rounded-xl border-2 border-dashed border-gray-100 py-8 flex items-center justify-center">
                           <p className="text-xs text-gray-300">No tasks</p>
@@ -275,7 +275,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
                                   {task.assignee ? (
                                     <div className="flex items-center gap-1.5">
                                       <Avatar name={task.assignee.name} />
-                                      <span className="text-xs text-gray-500 truncate max-w-[90px]">
+                                      <span className="text-xs text-gray-500 truncate max-w-22.5">
                                         {task.assignee.name}
                                       </span>
                                     </div>
