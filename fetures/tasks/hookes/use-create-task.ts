@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferResponseType, InferRequestType } from "hono/client";
 import { toast } from "sonner";
 
-type ResponseType = InferResponseType<typeof client.api.tasks["$post"]>;
-type RequestType = InferRequestType<typeof client.api.tasks["$post"]>["json"];
+type ResponseType = InferResponseType<(typeof client.api.tasks)["$post"]>;
+type RequestType = InferRequestType<(typeof client.api.tasks)["$post"]>["json"];
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -21,6 +21,7 @@ export const useCreateTask = () => {
     onSuccess: () => {
       toast.success("Task created");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
     },
 
     onError: () => {

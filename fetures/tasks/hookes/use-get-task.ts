@@ -3,15 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 
 interface useGetTasksProps {
   workspaceId: string;
+  projectId?: string | null;  // 👈 add this
 }
-
-export const useGetTask = ({ workspaceId }: useGetTasksProps) => {
+export const useGetTask = ({ workspaceId, projectId }: useGetTasksProps) => {
   return useQuery({
-    queryKey: ["tasks", workspaceId],
-    enabled: !!workspaceId, // <--- MUST BE HERE, OUTSIDE queryFn
+    queryKey: ["tasks", workspaceId, projectId],  // 👈 include projectId here
+    enabled: !!workspaceId,
     queryFn: async () => {
       const response = await client.api.tasks.$get({
-        query: { workspaceId },
+        query: { 
+          workspaceId,
+          projectId,  // 👈 pass it to the API
+        },
       });
 
       if (!response.ok) {

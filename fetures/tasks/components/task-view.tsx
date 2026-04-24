@@ -56,6 +56,7 @@ export default function TaskView() {
   const { data: membersData } = useGetMembers({ workspaceId });
   const { data: tasksData, isLoading: isLoadingTasks } = useGetTask({
     workspaceId,
+    projectId
   });
 
   // --- Mutations ---
