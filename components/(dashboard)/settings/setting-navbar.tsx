@@ -57,14 +57,14 @@ export function SettingNavbar({ user }: Props) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <span className="text-lg font-bold text-slate-900 tracking-tight">
             FlowTask
           </span>
-        </div>
+        </Link>
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-7"></nav>

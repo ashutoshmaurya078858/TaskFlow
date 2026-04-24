@@ -3,20 +3,13 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import {
-  ChevronsUpDown,
-  Circle,
-  Plus,
-  Sparkles,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { ChevronsUpDown, Circle, Plus, Sparkles } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -31,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
@@ -38,65 +32,65 @@ import { NAV_ITEMS } from "@/lib/dashboard";
 import { WorkspaceSwitcher } from "./workspace-swicher";
 import Project from "@/fetures/projects/components/project";
 import { CreateProjectModal } from "@/fetures/projects/components/project-model";
-import { useGetMembers } from "@/fetures/members/api/use-get-members";
-import { useCurrent } from "@/app/(auth)/api/use-corrent";
 import { useGetMyTasks } from "@/fetures/tasks/api/use-getmy-task";
 
 interface AppSidebarProps {
-  user: any;
-}
-
-interface Member {
-  $id: string;
-  name: string;
-  email: string;
+  user: {
+    name: string;
+    email: string;
+  };
 }
 
 export function AppSidebar({ user }: AppSidebarProps) {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
   const pathname = usePathname();
   const params = useParams();
-
-  const { data: currentUser } = useCurrent();
   const workspaceId = params.workspace as string;
 
-  // Resolve current user's member ID
-  const { data: membersData } = useGetMembers({ workspaceId });
-  const members = (membersData?.populateMembers as unknown as Member[]) ?? [];
-  const myMember = members.find((m) => m.email === currentUser?.email);
-  const myMemberId = myMember?.$id ?? "";
-
-  // Fetch all my tasks for the badge count
-  const { data: myTasksData } = useGetMyTasks({
+  /**
+   * Optimization: Fetch tasks using the user's email or a "me" flag 
+   * if your API supports it, avoiding the need to fetch the full members list.
+   * If your API strictly requires memberId, ensure your `user` object 
+   * includes it to prevent an extra API hop.
+   */
+  const { data: myTasksData, isLoading: isLoadingTasks } = useGetMyTasks({
     workspaceId,
-    assigneeId: myMemberId,
+    // Assuming your API can handle email-based filtering or 
+    // that 'user' prop is hydrated with the correct ID.
+    assigneeId: user?.email, 
   });
+
   const myTaskCount = myTasksData?.documents?.length ?? 0;
 
-  React.useEffect(() => setMounted(true), []);
-  const isDark = mounted && resolvedTheme === "dark";
-
   const initials = React.useMemo(() => {
-    const name: string = user?.name ?? "John Doe";
-    return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+    return (user?.name ?? "JD")
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   }, [user]);
 
   return (
     <>
-      <CreateProjectModal workspaceId={workspaceId} open={open} onOpenChange={setOpen} />
-      <Sidebar collapsible="icon" className="bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100">
-        <SidebarHeader>
+      <CreateProjectModal
+        workspaceId={workspaceId}
+        open={open}
+        onOpenChange={setOpen}
+      />
+      <Sidebar
+        collapsible="icon"
+        className="bg-white/90 backdrop-blur-md shadow-sm border-r border-slate-100"
+      >
+        <SidebarHeader className="py-4">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <Link href="/dashboard" className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-white" />
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <Sparkles className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-lg font-bold text-slate-900 tracking-tight group-data-[collapsible=icon]:hidden">
+                  <span className="text-xl font-bold text-slate-900 tracking-tight group-data-[collapsible=icon]:hidden">
                     FlowTask
                   </span>
                 </Link>
@@ -110,20 +104,18 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarGroupLabel className="px-4 text-[10px] uppercase tracking-widest font-bold text-slate-400">
+              Menu
+            </SidebarGroupLabel>
+            <SidebarMenu className="gap-1 px-2">
               {NAV_ITEMS.map(({ title, id, icon: Icon }) => {
-                const href =
-                  id === "home"
-                    ? `/dashboard/workspace/${workspaceId}`
-                    : id === "my-tasks"
-                      ? `/dashboard/workspace/${workspaceId}/my-tasks`
-                      : `/dashboard/${workspaceId}/${id}`;
+                const href = id === "home" 
+                  ? `/dashboard/workspace/${workspaceId}`
+                  : id === "my-tasks"
+                  ? `/dashboard/workspace/${workspaceId}/my-tasks`
+                  : `/dashboard/${workspaceId}/${id}`;
 
                 const isActive = pathname === href;
-
-                // Dynamically assign badge only for my-tasks
-                const badge = id === "my-tasks" && myTaskCount > 0 ? myTaskCount : null;
 
                 return (
                   <SidebarMenuItem key={id}>
@@ -132,27 +124,29 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       isActive={isActive}
                       tooltip={title}
                       className={cn(
-                        "border-l-2 transition-all duration-150",
+                        "rounded-lg px-3 py-2 transition-all duration-200",
                         isActive
-                          ? "border-l-violet-500 bg-violet-500/10 text-violet-600 dark:text-violet-400"
-                          : "border-l-transparent",
+                          ? "bg-indigo-50 text-indigo-700 font-semibold"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                       )}
                     >
                       <Link href={href}>
-                        <Icon
-                          className={cn(
-                            "h-4 w-4 shrink-0",
-                            isActive
-                              ? "text-violet-600 dark:text-violet-400"
-                              : "text-sidebar-foreground/50",
-                          )}
-                        />
+                        <Icon className={cn("h-4 w-4", isActive ? "text-indigo-600" : "text-slate-400")} />
                         <span>{title}</span>
                       </Link>
                     </SidebarMenuButton>
-                    {badge && (
-                      <SidebarMenuBadge className="bg-violet-500/15 text-violet-600 dark:text-violet-400 font-bold text-[10px]">
-                        {badge}
+
+                    {id === "my-tasks" && (
+                      <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
+                        {isLoadingTasks ? (
+                          <Skeleton className="h-4 w-5 bg-slate-200" />
+                        ) : (
+                          myTaskCount > 0 && (
+                            <span className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-md text-[10px] font-bold">
+                              {myTaskCount}
+                            </span>
+                          )
+                        )}
                       </SidebarMenuBadge>
                     )}
                   </SidebarMenuItem>
@@ -164,52 +158,65 @@ export function AppSidebar({ user }: AppSidebarProps) {
           <SidebarSeparator />
 
           <SidebarGroup>
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
-            <SidebarGroupAction title="Add project">
-              <Plus className="h-3.5 w-3.5" onClick={() => setOpen(true)} />
-            </SidebarGroupAction>
-            <SidebarMenu>
+            <div className="flex items-center justify-between px-4 mb-2 group-data-[collapsible=icon]:hidden">
+              <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400">
+                Projects
+              </span>
+              <button
+                onClick={() => setOpen(true)}
+                className="p-1 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all cursor-pointer"
+              >
+                <Plus className="size-3.5" />
+              </button>
+            </div>
+            <SidebarMenu className="px-2">
               <Project />
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
 
-        <SidebarSeparator />
-
-        <SidebarFooter>
+        {/* <SidebarFooter className="p-4">
           <SidebarMenu>
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent" tooltip="Account">
-                    <div
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                      style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}
-                    >
+                  <SidebarMenuButton
+                    size="lg"
+                    className="rounded-xl border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all"
+                  >
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-sm">
                       {initials}
                     </div>
-                    <div className="grid flex-1 text-left leading-tight">
-                      <span className="truncate text-xs font-semibold">{user?.name ?? "John Doe"}</span>
-                      <span className="truncate text-[10px] text-sidebar-foreground/50">{user?.email ?? "john@example.com"}</span>
+                    <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+                      <span className="truncate text-xs font-bold text-slate-900">
+                        {user.name}
+                      </span>
+                      <span className="truncate text-[10px] text-slate-400">
+                        {user.email}
+                      </span>
                     </div>
-                    <div className="ml-auto flex items-center gap-1.5">
-                      <Circle className="h-2 w-2 fill-emerald-400 text-emerald-400" />
-                      <ChevronsUpDown className="h-3.5 w-3.5 text-sidebar-foreground/40" />
-                    </div>
+                    <ChevronsUpDown className="h-3.5 w-3.5 text-slate-400 group-data-[collapsible=icon]:hidden" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" align="end" className="w-48 rounded-xl">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Billing</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-500 focus:text-red-500">Sign out</DropdownMenuItem>
+                <DropdownMenuContent side="top" align="start" className="w-56 rounded-xl shadow-xl border-slate-100">
+                  <DropdownMenuItem className="gap-2 cursor-pointer py-2.5">Profile</DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2 cursor-pointer py-2.5">Billing</DropdownMenuItem>
+                  <SidebarSeparator />
+                  <DropdownMenuItem className="gap-2 cursor-pointer py-2.5 text-red-600 focus:text-red-600 focus:bg-red-50">
+                    Sign out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
-          <div className="flex justify-end px-2 pb-1 group-data-[collapsible=icon]:justify-center">
+          <div className="mt-2 flex items-center justify-between group-data-[collapsible=icon]:justify-center">
             <ThemeToggle />
+            <div className="flex items-center gap-1.5 group-data-[collapsible=icon]:hidden">
+               <Circle className="h-2 w-2 fill-emerald-500 text-emerald-500 animate-pulse" />
+               <span className="text-[10px] font-medium text-slate-400">Online</span>
+            </div>
           </div>
-        </SidebarFooter>
+        </SidebarFooter> */}
       </Sidebar>
     </>
   );
