@@ -41,6 +41,7 @@ import { ConfirmDeleteTaskDialog } from "./components/ConfirmDeleteTaskDialog";
 import { EditTaskModal } from "./components/EditTaskModal";
 import { TableView } from "./components/TableView";
 import { CalendarView } from "./components/Calendarview";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // ─── Types & Constants ────────────────────────────────────────────────────────
 type TabType = "table" | "kanban" | "calendar";
@@ -95,14 +96,9 @@ const STATUS_OPTIONS: {
   },
 ];
 
+
 // ─── Summary Card ─────────────────────────────────────────────────────────────
-function SummaryCard({
-  label,
-  count,
-  icon,
-  colorClass,
-  isLoading,
-}: {
+function SummaryCard({ label, count, icon, colorClass, isLoading }: {
   label: string;
   count: number;
   icon: React.ReactNode;
@@ -110,14 +106,14 @@ function SummaryCard({
   isLoading?: boolean;
 }) {
   return (
-    <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border", colorClass)}>
-      <span>{icon}</span>
-      <div>
-        <p className="text-xs font-medium opacity-70">{label}</p>
+    <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border transition-all", colorClass)}>
+      <span className="p-2 bg-white/50 rounded-lg shrink-0">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] uppercase tracking-wider font-bold opacity-60">{label}</p>
         {isLoading ? (
-          <div className="h-6 w-6 rounded bg-current opacity-20 animate-pulse mt-0.5" />
+          <Skeleton className="h-7 w-12 bg-current opacity-10 mt-1" />
         ) : (
-          <p className="text-xl font-bold leading-none">{count}</p>
+          <p className="text-2xl font-bold tracking-tight mt-0.5">{count}</p>
         )}
       </div>
     </div>
@@ -336,16 +332,7 @@ export default function MyTasksView() {
           </div>
         )}
 
-        {/* Empty state */}
-        {!isLoadingFiltered && tasks.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <CheckCircle2 className="size-10 text-gray-200 mb-3" />
-            <p className="text-gray-500 font-medium">No tasks found</p>
-            <p className="text-sm text-gray-400 mt-1">
-              {selectedStatuses.length > 0 || search ? "Try adjusting your filters" : "You have no tasks assigned yet"}
-            </p>
-          </div>
-        )}
+       
 
         {/* View */}
         {(isLoadingFiltered || tasks.length > 0) && (

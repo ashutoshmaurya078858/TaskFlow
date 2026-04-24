@@ -37,6 +37,8 @@ import { Badge } from "@/components/ui/badge";
 
 import { STATUS_COLORS, STATUS_LABELS, Task, TaskStatus } from "../types";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TaskRowSkeleton } from "./TaskRowSkeleton";
 
 // ============================================================================
 // Types & Constants
@@ -313,16 +315,36 @@ export function TableView({
   );
 
   // --- Rendering ---
+  // Inside TableView component
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-3">
-        <Loader2 className="size-7 animate-spin text-indigo-400" />
-        <p className="text-sm text-gray-400">Loading tasks...</p>
+      <div className="flex flex-col gap-3">
+        {/* Search Bar Skeleton */}
+        <div className="flex items-center justify-between gap-3">
+          <Skeleton className="h-9 w-64 bg-gray-100 rounded-lg" />
+          <Skeleton className="h-4 w-24 bg-gray-50 rounded" />
+        </div>
+
+        {/* Table Body Skeleton */}
+        <div className="rounded-xl border border-gray-100 overflow-hidden bg-white shadow-sm">
+          {/* Header Placeholder */}
+          <div className="bg-gray-50/80 px-4 py-3 border-b border-gray-100 flex items-center gap-4">
+            <Skeleton className="h-3 w-16 bg-gray-200" />
+            <Skeleton className="h-3 w-16 bg-gray-200" />
+            <Skeleton className="h-3 w-16 bg-gray-200" />
+          </div>
+          {/* Rows */}
+          <div className="divide-y divide-gray-50">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <TaskRowSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (tasks.length === 0) {
+  if (!isLoading&&tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
         <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">
