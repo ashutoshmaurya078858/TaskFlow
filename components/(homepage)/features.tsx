@@ -3,38 +3,47 @@ import { FadeIn } from "./shared";
 
 export function Features() {
   return (
-    <section className="py-24 bg-white" id="features">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <FadeIn className="text-center mb-16">
-          <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-3">
+    <section className="py-28 bg-slate-950" id="features">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Section header */}
+        <FadeIn className="mb-16 max-w-xl">
+          <p className="text-xs font-semibold text-indigo-400 uppercase tracking-[0.2em] mb-4">
             Everything you need
           </p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-[1.08] mb-5">
             Built for how teams
             <br />
-            actually work
+            <span className="text-slate-400">actually work</span>
           </h2>
-          <p className="max-w-xl mx-auto text-slate-500 text-lg">
-            Stop juggling tools. FlowTask unifies planning, tracking and
+          <p className="text-slate-400 text-lg font-light leading-relaxed">
+            Stop juggling tools. FlowTask unifies planning, tracking, and
             shipping in one place.
           </p>
         </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Feature grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-800/60 rounded-2xl overflow-hidden border border-slate-800">
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
             <FadeIn key={title} delay={i * 60}>
-              <div className="group relative bg-white border border-slate-200 rounded-2xl p-6 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50 transition-all cursor-pointer overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-violet-50/0 group-hover:from-indigo-50/60 group-hover:to-violet-50/40 transition-all" />
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center mb-4 transition-colors">
-                    <Icon className="w-5 h-5 text-indigo-600" />
-                  </div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-2">
+              <div className="group bg-slate-950 p-7 hover:bg-slate-900 transition-colors cursor-pointer h-full flex flex-col gap-5">
+                {/* Icon */}
+                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors">
+                  <Icon className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-2 leading-snug">
                     {title}
                   </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-400 transition-colors">
                     {desc}
                   </p>
+                </div>
+                {/* Subtle arrow on hover */}
+                <div className="mt-auto pt-2">
+                  <span className="text-[11px] text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity font-medium flex items-center gap-1">
+                    Learn more
+                    <span className="group-hover:translate-x-0.5 transition-transform inline-block">→</span>
+                  </span>
                 </div>
               </div>
             </FadeIn>
