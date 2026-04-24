@@ -2,14 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-// 1. Import useParams and usePathname instead of useSearchParams
 import { useParams, usePathname } from "next/navigation";
 import {
-  Zap,
-  Search,
-  Plus,
-  Circle,
   ChevronsUpDown,
+  Circle,
+  Plus,
   Sparkles,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -19,13 +16,13 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupAction,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuBadge,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
@@ -37,13 +34,22 @@ import {
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
-import { NAV_ITEMS, PROJECTS } from "@/lib/dashboard";
+import { NAV_ITEMS } from "@/lib/dashboard";
 import { WorkspaceSwitcher } from "./workspace-swicher";
 import Project from "@/fetures/projects/components/project";
 import { CreateProjectModal } from "@/fetures/projects/components/project-model";
+import { useGetMembers } from "@/fetures/members/api/use-get-members";
+import { useCurrent } from "@/app/(auth)/api/use-corrent";
+import { useGetMyTasks } from "@/fetures/tasks/api/use-getmy-task";
 
 interface AppSidebarProps {
   user: any;
+}
+
+interface Member {
+  $id: string;
+  name: string;
+  email: string;
 }
 
 export function AppSidebar({ user }: AppSidebarProps) {
@@ -51,39 +57,37 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const [mounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
-  // 2. Extract the current path and dynamic workspace ID from the URL
   const pathname = usePathname();
   const params = useParams();
 
-  // Note: Ensure this matches the exact folder name in your Next.js app directory.
-  // e.g., if your folder is [workspaceId], use params.workspaceId
-  // Since your backend used "workspace", we will assume params.workspace
+  const { data: currentUser } = useCurrent();
   const workspaceId = params.workspace as string;
+
+  // Resolve current user's member ID
+  const { data: membersData } = useGetMembers({ workspaceId });
+  const members = (membersData?.populateMembers as unknown as Member[]) ?? [];
+  const myMember = members.find((m) => m.email === currentUser?.email);
+  const myMemberId = myMember?.$id ?? "";
+
+  // Fetch all my tasks for the badge count
+  const { data: myTasksData } = useGetMyTasks({
+    workspaceId,
+    assigneeId: myMemberId,
+  });
+  const myTaskCount = myTasksData?.documents?.length ?? 0;
 
   React.useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme === "dark";
 
   const initials = React.useMemo(() => {
     const name: string = user?.name ?? "John Doe";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
+    return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   }, [user]);
 
   return (
     <>
-      <CreateProjectModal
-        workspaceId={workspaceId}
-        open={open}
-        onOpenChange={setOpen}
-      />
-      <Sidebar
-        collapsible="icon"
-        className="bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100"
-      >
+      <CreateProjectModal workspaceId={workspaceId} open={open} onOpenChange={setOpen} />
+      <Sidebar collapsible="icon" className="bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100">
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -99,8 +103,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-
-          {/* Workspace Switcher Integrated */}
           <WorkspaceSwitcher />
         </SidebarHeader>
 
@@ -110,19 +112,18 @@ export function AppSidebar({ user }: AppSidebarProps) {
           <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarMenu>
-              {NAV_ITEMS.map(({ title, id, icon: Icon, badge }) => {
-                // 3. Construct the dynamic URL for each navigation item
-                // If it's the "home" id, it just goes to the root of the workspace.
-                // Otherwise, it appends the specific page (e.g. /settings)
+              {NAV_ITEMS.map(({ title, id, icon: Icon }) => {
                 const href =
                   id === "home"
                     ? `/dashboard/workspace/${workspaceId}`
                     : id === "my-tasks"
                       ? `/dashboard/workspace/${workspaceId}/my-tasks`
-                      : "/";
+                      : `/dashboard/${workspaceId}/${id}`;
 
-                // 4. Check if the current URL matches the item's destination URL
                 const isActive = pathname === href;
+
+                // Dynamically assign badge only for my-tasks
+                const badge = id === "my-tasks" && myTaskCount > 0 ? myTaskCount : null;
 
                 return (
                   <SidebarMenuItem key={id}>
@@ -169,23 +170,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </SidebarGroupAction>
             <SidebarMenu>
               <Project />
-              {/* {PROJECTS.map(({ name, color, icon: Icon, progress }) => (
-              <SidebarMenuItem key={name}>
-                <SidebarMenuButton
-                  tooltip={`${name} · ${progress}%`}
-                  className="hover:bg-sidebar-accent transition-colors duration-150"
-                >
-                  <Icon className="h-4 w-4 shrink-0" style={{ color }} />
-                  <span className="flex-1 truncate">{name}</span>
-                  <span
-                    className="ml-auto shrink-0 text-[10px] font-semibold group-data-[collapsible=icon]:hidden"
-                    style={{ color }}
-                  >
-                    {progress}%
-                  </span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))} */}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
@@ -197,26 +181,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent"
-                    tooltip="Account"
-                  >
+                  <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent" tooltip="Account">
                     <div
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                      style={{
-                        background: "linear-gradient(135deg,#7c3aed,#a855f7)",
-                      }}
+                      style={{ background: "linear-gradient(135deg,#7c3aed,#a855f7)" }}
                     >
                       {initials}
                     </div>
                     <div className="grid flex-1 text-left leading-tight">
-                      <span className="truncate text-xs font-semibold">
-                        {user?.name ?? "John Doe"}
-                      </span>
-                      <span className="truncate text-[10px] text-sidebar-foreground/50">
-                        {user?.email ?? "john@example.com"}
-                      </span>
+                      <span className="truncate text-xs font-semibold">{user?.name ?? "John Doe"}</span>
+                      <span className="truncate text-[10px] text-sidebar-foreground/50">{user?.email ?? "john@example.com"}</span>
                     </div>
                     <div className="ml-auto flex items-center gap-1.5">
                       <Circle className="h-2 w-2 fill-emerald-400 text-emerald-400" />
@@ -224,16 +198,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     </div>
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  align="end"
-                  className="w-48 rounded-xl"
-                >
+                <DropdownMenuContent side="top" align="end" className="w-48 rounded-xl">
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Billing</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-500 focus:text-red-500">
-                    Sign out
-                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-red-500 focus:text-red-500">Sign out</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </SidebarMenuItem>
