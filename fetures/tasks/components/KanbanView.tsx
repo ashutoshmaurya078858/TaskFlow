@@ -256,7 +256,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
                                   {task.assignee ? (
                                     <div className="flex items-center gap-1.5">
                                       <Avatar name={task.assignee.name} />
-                                      <span className="text-xs text-gray-500 truncate max-w-[90px]">
+                                      <span className="text-xs text-gray-500 truncate max-w-22.5">
                                         {task.assignee.name}
                                       </span>
                                     </div>

@@ -402,7 +402,7 @@ export function TableView({
                   onClick={() => onView && onView(task)}
                   className="group hover:bg-indigo-50/30 transition-colors cursor-pointer border-b border-gray-50"
                 >
-                  <TableCell className="px-4 py-3.5 max-w-[260px]">
+                  <TableCell className="px-4 py-3.5 max-w-65">
                     <p className="font-medium text-gray-900 truncate group-hover:text-indigo-700 transition-colors">
                       {task.name}
                     </p>
