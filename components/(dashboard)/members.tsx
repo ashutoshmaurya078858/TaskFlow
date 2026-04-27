@@ -47,7 +47,7 @@ function MemberRowSkeleton({ width = "w-[40%]" }: { width?: string }) {
   return (
     <div className="relative overflow-hidden flex items-center gap-4 px-5 py-4 group">
       {/* 1. The Shimmer Layer */}
-      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+      <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
 
       {/* 2. Avatar Container */}
       <div className="relative shrink-0">

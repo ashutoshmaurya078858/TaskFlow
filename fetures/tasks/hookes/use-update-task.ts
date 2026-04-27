@@ -25,9 +25,15 @@ export const useUpdateTask = () => {
 
       return await response.json();
     },
+    onSuccess: (data, variables) => {
+      const taskId = variables.param.taskId;
 
-    onSuccess: () => {
       toast.success("Task updated");
+
+      // 1. Invalidate the specific task detail
+      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+
+      // 2. Invalidate all task lists so they show the updated info
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
     },

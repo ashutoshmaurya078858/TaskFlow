@@ -50,6 +50,8 @@ import { useUpdateTask } from "../hookes/use-update-task";
 import { useDeleteTask } from "../hookes/use-delete-task";
 import { Task, TaskStatus } from "../types";
 import { useGetTaskById } from "../hookes/use-get-taskbyId";
+import { Skeleton } from "@/components/ui/skeleton";
+import TaskDetailSkeleton from "./TaskDetailSkeleton";
 
 // ─── Status config ────────────────────────────────────────────────────────────
 const STATUS_CONFIG: Record<
@@ -114,7 +116,7 @@ function Avatar({
     <span
       className={cn(
         "inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-semibold shrink-0",
-        sizeClass
+        sizeClass,
       )}
     >
       {initials}
@@ -245,7 +247,7 @@ function StatusDropdown({
           disabled={disabled}
           className={cn(
             "inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all hover:opacity-80 disabled:opacity-50",
-            current.badge
+            current.badge,
           )}
         >
           {current.icon}
@@ -269,7 +271,7 @@ function StatusDropdown({
               "flex items-center gap-2.5 text-sm px-2 py-2 rounded-lg cursor-pointer transition-colors",
               value === key
                 ? "bg-gray-50 text-gray-900"
-                : "text-gray-600 hover:bg-gray-50"
+                : "text-gray-600 hover:bg-gray-50",
             )}
           >
             <span className={cn("w-2 h-2 rounded-full shrink-0", config.dot)} />
@@ -312,7 +314,7 @@ export default function TaskDetailPage() {
     }
     updateTask(
       { param: { taskId }, json: { name: editedName.trim() } },
-      { onSettled: () => setIsEditingName(false) }
+      { onSettled: () => setIsEditingName(false) },
     );
   };
 
@@ -323,14 +325,14 @@ export default function TaskDetailPage() {
     }
     updateTask(
       { param: { taskId }, json: { description: editedDesc } },
-      { onSettled: () => setIsEditingDesc(false) }
+      { onSettled: () => setIsEditingDesc(false) },
     );
   };
 
   const handleDelete = () => {
     deleteTask(
       { param: { taskId } },
-      { onSuccess: () => router.push(`/dashboard/workspace/${workspaceId}`) }
+      { onSuccess: () => router.push(`/dashboard/workspace/${workspaceId}`) },
     );
   };
 
@@ -345,11 +347,7 @@ export default function TaskDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="size-6 animate-spin text-indigo-500" />
-      </div>
-    );
+    return <TaskDetailSkeleton />;
   }
 
   if (!task) {
@@ -396,7 +394,7 @@ export default function TaskDetailPage() {
             </>
           )}
           <BreadcrumbItem>
-            <BreadcrumbPage className="text-gray-700 text-sm font-medium truncate max-w-[200px]">
+            <BreadcrumbPage className="text-gray-700 text-sm font-medium truncate max-w-50">
               {task.name}
             </BreadcrumbPage>
           </BreadcrumbItem>
@@ -414,7 +412,10 @@ export default function TaskDetailPage() {
             <ArrowLeft className="size-4" />
             Back
           </button>
-          <DeleteConfirmDialog onConfirm={handleDelete} isDeleting={isDeleting} />
+          <DeleteConfirmDialog
+            onConfirm={handleDelete}
+            isDeleting={isDeleting}
+          />
         </div>
 
         <Separator className="bg-gray-50" />
@@ -517,7 +518,9 @@ export default function TaskDetailPage() {
                     {task.assignee.name}
                   </p>
                   {task.assignee.email && (
-                    <p className="text-xs text-gray-400">{task.assignee.email}</p>
+                    <p className="text-xs text-gray-400">
+                      {task.assignee.email}
+                    </p>
                   )}
                 </div>
               </div>
@@ -545,7 +548,7 @@ export default function TaskDetailPage() {
               <span
                 className={cn(
                   "text-sm font-medium",
-                  isOverdue ? "text-red-500" : "text-gray-800"
+                  isOverdue ? "text-red-500" : "text-gray-800",
                 )}
               >
                 {format(dueDate, "MMM d, yyyy")}
@@ -596,7 +599,7 @@ export default function TaskDetailPage() {
               value={editedDesc}
               onChange={(e) => setEditedDesc(e.target.value)}
               placeholder="Add a description..."
-              className="min-h-[140px] text-sm border-gray-200 focus-visible:ring-indigo-400 resize-none"
+              className="min-h-35 text-sm border-gray-200 focus-visible:ring-indigo-400 resize-none"
               autoFocus
             />
             <div className="flex items-center gap-2 justify-end">
