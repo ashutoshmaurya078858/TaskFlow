@@ -55,7 +55,11 @@ interface Member {
 const TABS: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: "table", label: "Table", icon: <Table2 className="size-3.5" /> },
   { id: "kanban", label: "Kanban", icon: <LayoutGrid className="size-3.5" /> },
-  { id: "calendar", label: "Calendar", icon: <Calendar className="size-3.5" /> },
+  {
+    id: "calendar",
+    label: "Calendar",
+    icon: <Calendar className="size-3.5" />,
+  },
 ];
 
 const STATUS_OPTIONS: {
@@ -96,9 +100,14 @@ const STATUS_OPTIONS: {
   },
 ];
 
-
 // ─── Summary Card ─────────────────────────────────────────────────────────────
-function SummaryCard({ label, count, icon, colorClass, isLoading }: {
+function SummaryCard({
+  label,
+  count,
+  icon,
+  colorClass,
+  isLoading,
+}: {
   label: string;
   count: number;
   icon: React.ReactNode;
@@ -106,10 +115,17 @@ function SummaryCard({ label, count, icon, colorClass, isLoading }: {
   isLoading?: boolean;
 }) {
   return (
-    <div className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border transition-all", colorClass)}>
+    <div
+      className={cn(
+        "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all",
+        colorClass,
+      )}
+    >
       <span className="p-2 bg-white/50 rounded-lg shrink-0">{icon}</span>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] uppercase tracking-wider font-bold opacity-60">{label}</p>
+        <p className="text-[10px] uppercase tracking-wider font-bold opacity-60">
+          {label}
+        </p>
         {isLoading ? (
           <Skeleton className="h-7 w-12 bg-current opacity-10 mt-1" />
         ) : (
@@ -147,22 +163,24 @@ export default function MyTasksView() {
   });
 
   // ── Query 2: filtered tasks → drives the table/kanban/calendar view
-  const { data: filteredTasksData, isLoading: isLoadingFiltered } = useGetMyTasks({
-    workspaceId,
-    assigneeId: myMemberId,
-    // Send a single status to the API; multi-status is handled client-side
-    status: selectedStatuses.length === 1 ? selectedStatuses[0] : null,
-  });
+  const { data: filteredTasksData, isLoading: isLoadingFiltered } =
+    useGetMyTasks({
+      workspaceId,
+      assigneeId: myMemberId,
+      // Send a single status to the API; multi-status is handled client-side
+      status: selectedStatuses.length === 1 ? selectedStatuses[0] : null,
+    });
 
   const allTasks = (allTasksData?.documents as unknown as Task[]) ?? [];
-  const fetchedTasks = (filteredTasksData?.documents as unknown as Task[]) ?? [];
+  const fetchedTasks =
+    (filteredTasksData?.documents as unknown as Task[]) ?? [];
 
   // Client-side: search + multi-status on top of the API result
   const tasks = useMemo(() => {
     let filtered = fetchedTasks;
     if (search.trim()) {
       filtered = filtered.filter((t) =>
-        t.name.toLowerCase().includes(search.toLowerCase())
+        t.name.toLowerCase().includes(search.toLowerCase()),
       );
     }
     if (selectedStatuses.length > 1) {
@@ -175,24 +193,31 @@ export default function MyTasksView() {
   const stats = useMemo(
     () => ({
       total: allTasks.length,
-      inProgress: allTasks.filter((t) => t.status === TaskStatus.IN_PROGRESS).length,
+      inProgress: allTasks.filter((t) => t.status === TaskStatus.IN_PROGRESS)
+        .length,
       done: allTasks.filter((t) => t.status === TaskStatus.DONE).length,
       overdue: allTasks.filter(
         (t) =>
           t.dueDate &&
           new Date(t.dueDate) < new Date() &&
-          t.status !== TaskStatus.DONE
+          t.status !== TaskStatus.DONE,
       ).length,
     }),
-    [allTasks]
+    [allTasks],
   );
 
   const { mutate: updateTask } = useUpdateTask();
 
-  const handleEdit = (task: Task) => { setSelectedTask(task); setEditOpen(true); };
-  const handleDelete = (task: Task) => { setSelectedTask(task); setDeleteOpen(true); };
+  const handleEdit = (task: Task) => {
+    setSelectedTask(task);
+    setEditOpen(true);
+  };
+  const handleDelete = (task: Task) => {
+    setSelectedTask(task);
+    setDeleteOpen(true);
+  };
   const handleOpenTask = (task: Task) => {
-    router.push(`/dashboard/workspace/${workspaceId}/tasks/${task.$id}`);
+    router.push(`/dashboard/${workspaceId}/tasks/${task.$id}`);
   };
   const handleCloseEdit = (open: boolean) => {
     setEditOpen(open);
@@ -209,7 +234,9 @@ export default function MyTasksView() {
   };
   const toggleStatus = (status: TaskStatus) => {
     setSelectedStatuses((prev) =>
-      prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
+      prev.includes(status)
+        ? prev.filter((s) => s !== status)
+        : [...prev, status],
     );
   };
 
@@ -223,42 +250,75 @@ export default function MyTasksView() {
 
   return (
     <>
-      <EditTaskModal open={editOpen} onOpenChange={handleCloseEdit} task={selectedTask} members={members} />
-      <ConfirmDeleteTaskDialog open={deleteOpen} onOpenChange={handleCloseDelete} task={selectedTask} />
+      <EditTaskModal
+        open={editOpen}
+        onOpenChange={handleCloseEdit}
+        task={selectedTask}
+        members={members}
+      />
+      <ConfirmDeleteTaskDialog
+        open={deleteOpen}
+        onOpenChange={handleCloseDelete}
+        task={selectedTask}
+      />
 
       <div className="flex flex-col gap-5">
         {/* Header */}
         <div>
           <h1 className="text-xl font-semibold text-gray-900">My Tasks</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Tasks assigned to you across all projects</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Tasks assigned to you across all projects
+          </p>
         </div>
 
         {/* Summary Cards — driven by unfiltered allTasks */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <SummaryCard label="Total" count={stats.total}
+          <SummaryCard
+            label="Total"
+            count={stats.total}
             icon={<CircleDashed className="size-4 text-slate-500" />}
-            colorClass="bg-slate-50 text-slate-700 border-slate-200" isLoading={isLoadingAll} />
-          <SummaryCard label="In Progress" count={stats.inProgress}
+            colorClass="bg-slate-50 text-slate-700 border-slate-200"
+            isLoading={isLoadingAll}
+          />
+          <SummaryCard
+            label="In Progress"
+            count={stats.inProgress}
             icon={<Clock className="size-4 text-blue-500" />}
-            colorClass="bg-blue-50 text-blue-700 border-blue-200" isLoading={isLoadingAll} />
-          <SummaryCard label="Completed" count={stats.done}
+            colorClass="bg-blue-50 text-blue-700 border-blue-200"
+            isLoading={isLoadingAll}
+          />
+          <SummaryCard
+            label="Completed"
+            count={stats.done}
             icon={<CheckCircle2 className="size-4 text-green-500" />}
-            colorClass="bg-green-50 text-green-700 border-green-200" isLoading={isLoadingAll} />
-          <SummaryCard label="Overdue" count={stats.overdue}
+            colorClass="bg-green-50 text-green-700 border-green-200"
+            isLoading={isLoadingAll}
+          />
+          <SummaryCard
+            label="Overdue"
+            count={stats.overdue}
             icon={<CircleAlert className="size-4 text-red-400" />}
-            colorClass="bg-red-50 text-red-700 border-red-200" isLoading={isLoadingAll} />
+            colorClass="bg-red-50 text-red-700 border-red-200"
+            isLoading={isLoadingAll}
+          />
         </div>
 
         {/* Controls */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
             {TABS.map((tab) => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-                  activeTab === tab.id ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
-                )}>
-                {tab.icon}{tab.label}
+                  activeTab === tab.id
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700",
+                )}
+              >
+                {tab.icon}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -266,15 +326,21 @@ export default function MyTasksView() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-400" />
-              <Input placeholder="Search tasks..." value={search}
+              <Input
+                placeholder="Search tasks..."
+                value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 h-9 text-sm w-48 border-gray-200 focus-visible:ring-indigo-500" />
+                className="pl-8 h-9 text-sm w-48 border-gray-200 focus-visible:ring-indigo-500"
+              />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm"
-                  className="h-9 gap-1.5 border-gray-200 text-sm bg-white hover:bg-gray-50">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 gap-1.5 border-gray-200 text-sm bg-white hover:bg-gray-50"
+                >
                   <SlidersHorizontal className="size-3.5" />
                   Status
                   {selectedStatuses.length > 0 && (
@@ -286,24 +352,34 @@ export default function MyTasksView() {
                 </Button>
               </DropdownMenuTrigger>
               {/* bg-white + border + shadow ensure the dropdown is always white */}
-              <DropdownMenuContent align="end" className="w-44 bg-white border border-gray-100 shadow-lg">
-                <DropdownMenuLabel className="text-xs text-gray-500">Filter by status</DropdownMenuLabel>
+              <DropdownMenuContent
+                align="end"
+                className="w-44 bg-white border border-gray-100 shadow-lg"
+              >
+                <DropdownMenuLabel className="text-xs text-gray-500">
+                  Filter by status
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {STATUS_OPTIONS.map((opt) => (
-                  <DropdownMenuCheckboxItem key={opt.value}
+                  <DropdownMenuCheckboxItem
+                    key={opt.value}
                     checked={selectedStatuses.includes(opt.value)}
                     onCheckedChange={() => toggleStatus(opt.value)}
-                    className="text-sm cursor-pointer">
+                    className="text-sm cursor-pointer"
+                  >
                     <span className="flex items-center gap-2">
-                      {opt.icon}{opt.label}
+                      {opt.icon}
+                      {opt.label}
                     </span>
                   </DropdownMenuCheckboxItem>
                 ))}
                 {selectedStatuses.length > 0 && (
                   <>
                     <DropdownMenuSeparator />
-                    <button onClick={() => setSelectedStatuses([])}
-                      className="w-full text-xs text-center py-1.5 text-red-500 hover:text-red-600 transition-colors">
+                    <button
+                      onClick={() => setSelectedStatuses([])}
+                      className="w-full text-xs text-center py-1.5 text-red-500 hover:text-red-600 transition-colors"
+                    >
                       Clear filters
                     </button>
                   </>
@@ -322,9 +398,16 @@ export default function MyTasksView() {
             {selectedStatuses.map((s) => {
               const opt = STATUS_OPTIONS.find((o) => o.value === s)!;
               return (
-                <button key={s} onClick={() => toggleStatus(s)}
-                  className={cn("flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border font-medium", opt.color)}>
-                  {opt.icon}{opt.label}
+                <button
+                  key={s}
+                  onClick={() => toggleStatus(s)}
+                  className={cn(
+                    "flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border font-medium",
+                    opt.color,
+                  )}
+                >
+                  {opt.icon}
+                  {opt.label}
                   <XCircle className="size-3 ml-0.5 opacity-60" />
                 </button>
               );
@@ -332,16 +415,24 @@ export default function MyTasksView() {
           </div>
         )}
 
-       
-
         {/* View */}
         {(isLoadingFiltered || tasks.length > 0) && (
           <div className="min-h-64">
             {activeTab === "table" && (
-              <TableView tasks={tasks} isLoading={isLoadingFiltered} onEdit={handleEdit} onDelete={handleDelete} onView={handleOpenTask} />
+              <TableView
+                tasks={tasks}
+                isLoading={isLoadingFiltered}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onView={handleOpenTask}
+              />
             )}
             {activeTab === "kanban" && (
-              <KanbanView tasks={tasks} isLoading={isLoadingFiltered} onChange={handleKanbanChange} />
+              <KanbanView
+                tasks={tasks}
+                isLoading={isLoadingFiltered}
+                onChange={handleKanbanChange}
+              />
             )}
             {activeTab === "calendar" && (
               <CalendarView tasks={tasks} isLoading={isLoadingFiltered} />
