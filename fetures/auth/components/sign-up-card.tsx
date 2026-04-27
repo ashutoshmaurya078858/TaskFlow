@@ -18,6 +18,7 @@ import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { RegesterSchema } from "@/app/(auth)/shemas";
 import { useRegister } from "@/app/(auth)/api/use-register";
+import { signUpWithGoogle } from "@/lib/oauth";
 
 
 const SignUpCard = () => {
@@ -40,8 +41,8 @@ const SignUpCard = () => {
     <div className="  flex items-center justify-center px-4">
       {/* Background glows */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-violet-600/20 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-700/10 blur-[100px]" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-150 h-150 rounded-full bg-violet-600/20 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-100 h-100 rounded-full bg-indigo-700/10 blur-[100px]" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -166,23 +167,15 @@ const SignUpCard = () => {
             </div>
 
             {/* OAuth */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid">
               <Button
                 type="button"
                 variant="outline"
                 className="h-11 bg-black/5 border-black/10 text-black/70 hover:bg-black/10 hover:text-black rounded-lg transition-colors flex items-center justify-center gap-2"
+                  onClick={() => signUpWithGoogle()}
               >
                 <FcGoogle />
                 Google
-              </Button>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11 bg-black/5 border-black/10 text-black/70 hover:bg-black/10 hover:text-black rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <FaGithub />
-                GitHub
               </Button>
             </div>
 

@@ -78,7 +78,7 @@ export default function TaskView() {
   };
 
   const handleOpenTask = (task: Task) => {
-    router.push(`/dashboard/workspace/${workspaceId}/tasks/${task.$id}`);
+    router.push(`/dashboard/${workspaceId}/tasks/${task.$id}`);
   };
 
   const handleCloseEdit = (open: boolean) => {

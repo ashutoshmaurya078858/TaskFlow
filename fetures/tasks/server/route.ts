@@ -251,6 +251,61 @@ const app = new Hono()
 
     // Return the ID of the deleted task so the frontend can remove it from state
     return c.json({ data: { $id: taskId } });
-  });
+  })
+  // Add this route to your existing tasks Hono app (before the .post route)
+// It fetches a single task by ID with populated project + assignee
+
+.get(
+  "/:taskId",
+  sessionMiddleware,
+  async (c) => {
+    const { users } = await createAdminClient();
+    const databases = c.get("databases");
+    const user = c.get("user");
+    const { taskId } = c.req.param();
+
+    // 1. Fetch the task
+    const task = await databases.getDocument(DATABASE_ID, TASKS_ID, taskId);
+
+    // 2. Verify the requesting user is a member of the workspace
+    const member = await getmember({
+      databases,
+      userId: user.$id,
+      workspaceId: task.workspaceId,
+    });
+
+    if (!member) {
+      return c.json({ error: "unauthorized" }, 401);
+    }
+
+    // 3. Populate project
+    const project = await databases.getDocument(
+      DATABASE_ID,
+      PROJECT_ID,
+      task.projectId,
+    );
+
+    // 4. Populate assignee
+    const assigneeMember = await databases.getDocument(
+      DATABASE_ID,
+      MEMBER_ID,
+      task.assigneeId,
+    );
+    const assigneeUser = await users.get(assigneeMember.userId);
+    const assignee = {
+      ...assigneeMember,
+      name: assigneeUser.name,
+      email: assigneeUser.email,
+    };
+
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee,
+      },
+    });
+  },
+)
 
 export default app;

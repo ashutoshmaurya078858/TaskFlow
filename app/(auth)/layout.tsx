@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,7 +14,14 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
     <main className="bg-neutral-100 min-h-screen">
       <div className="mx-auto max-w-screen-2xl p-4">
         <nav className="flex justify-between items-center">
-          <Image src="/logo.svg" alt="logo" width={152} height={56} />
+          <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-lg font-bold text-slate-900 tracking-tight">
+            FlowTask
+          </span>
+        </div>
           <Button type="button"
                 variant="outline"asChild>
             <Link href={pathname === "/sign-in" ? "/sign-up" : "/sign-in"}>

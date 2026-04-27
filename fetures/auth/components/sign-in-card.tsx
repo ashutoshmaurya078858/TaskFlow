@@ -19,11 +19,11 @@ import { useLogin } from "@/app/(auth)/api/use-login";
 import { loginSchema } from "@/app/(auth)/shemas";
 import { signUpWithGoogle } from "@/lib/oauth";
 // Optional: If you use lucide-react, an alert icon looks great here
-// import { AlertTriangle } from "lucide-react"; 
+// import { AlertTriangle } from "lucide-react";
 
 const SignInCard = () => {
   const { mutate, isPending, isError, error } = useLogin();
-  
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -36,13 +36,12 @@ const SignInCard = () => {
     mutate(data);
   };
 
-  
   return (
     <div className=" flex items-center justify-center px-4 w-full">
       {/* Background glows */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-indigo-600/20 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-violet-700/10 blur-[100px]" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-150 h-150 rounded-full bg-indigo-600/20 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-100 h-100 rounded-full bg-violet-700/10 blur-[100px]" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -61,7 +60,10 @@ const SignInCard = () => {
             {isError && (
               <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-600 text-sm">
                 {/* <AlertTriangle className="w-4 h-4" /> */}
-                <p>{error?.message || "Invalid email or password. Please try again."}</p>
+                <p>
+                  {error?.message ||
+                    "Invalid email or password. Please try again."}
+                </p>
               </div>
             )}
 
@@ -119,7 +121,7 @@ const SignInCard = () => {
               </div>
 
               <Button
-              onClick={()=>signUpWithGoogle()}
+                onClick={() => signUpWithGoogle()}
                 disabled={isPending}
                 type="submit"
                 className="w-full h-11 bg-indigo-600 hover:bg-indigo-500 text-black font-semibold rounded-lg mt-2 transition-colors"
@@ -135,9 +137,9 @@ const SignInCard = () => {
               <div className="flex-1 h-px bg-black/10" />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid">
               <Button
-              onClick={()=>signUpWithGoogle()}
+                onClick={() => signUpWithGoogle()}
                 type="button"
                 variant="outline"
                 className="h-11 bg-black/5 border-black/10 text-black/70 hover:bg-black/10 hover:text-black rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -146,14 +148,7 @@ const SignInCard = () => {
                 Google
               </Button>
 
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11 bg-black/5 border-black/10 text-black/70 hover:bg-black/10 hover:text-black rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <FaGithub />
-                GitHub
-              </Button>
+            
             </div>
 
             <p className="text-center text-black/30 text-sm mt-6">
