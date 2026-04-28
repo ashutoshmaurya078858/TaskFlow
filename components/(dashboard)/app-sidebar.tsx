@@ -53,14 +53,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
    * If your API strictly requires memberId, ensure your `user` object 
    * includes it to prevent an extra API hop.
    */
-  const { data: myTasksData, isLoading: isLoadingTasks } = useGetMyTasks({
-    workspaceId,
-    // Assuming your API can handle email-based filtering or 
-    // that 'user' prop is hydrated with the correct ID.
-    assigneeId: user?.email, 
-  });
+ 
 
-  const myTaskCount = myTasksData?.documents?.length ?? 0;
 
   const initials = React.useMemo(() => {
     return (user?.name ?? "JD")
@@ -136,19 +130,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       </Link>
                     </SidebarMenuButton>
 
-                    {id === "my-tasks" && (
-                      <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
-                        {isLoadingTasks ? (
-                          <Skeleton className="h-4 w-5 bg-slate-200" />
-                        ) : (
-                          myTaskCount > 0 && (
-                            <span className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-md text-[10px] font-bold">
-                              {myTaskCount}
-                            </span>
-                          )
-                        )}
-                      </SidebarMenuBadge>
-                    )}
                   </SidebarMenuItem>
                 );
               })}
