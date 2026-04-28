@@ -6,7 +6,7 @@ export function TaskRowSkeleton() {
   return (
     <div className="relative overflow-hidden flex items-center gap-4 px-4 py-4 border-b border-gray-50 group">
       {/* Sweeping Shimmer Effect */}
-      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+      <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
 
       {/* Task Name & Desc */}
       <div className="flex-1 min-w-0 space-y-2">

@@ -50,7 +50,6 @@ import { useUpdateTask } from "../hookes/use-update-task";
 import { useDeleteTask } from "../hookes/use-delete-task";
 import { Task, TaskStatus } from "../types";
 import { useGetTaskById } from "../hookes/use-get-taskbyId";
-import { Skeleton } from "@/components/ui/skeleton";
 import TaskDetailSkeleton from "./TaskDetailSkeleton";
 
 // ─── Status config ────────────────────────────────────────────────────────────
