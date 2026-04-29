@@ -177,13 +177,16 @@ export default function TaskView() {
               onView={handleOpenTask}
             />
           )}
-          {activeTab === "kanban" && (
+          
+         <div className="min-w-0 overflow-hidden">
+  {activeTab === "kanban" && (
             <KanbanView
               tasks={tasks}
               isLoading={isLoadingTasks}
               onChange={handleKanbanChange} // ← NEW
             />
           )}
+          </div>
           {activeTab === "calendar" && (
             <CalendarView tasks={tasks} isLoading={isLoadingTasks} />
           )}

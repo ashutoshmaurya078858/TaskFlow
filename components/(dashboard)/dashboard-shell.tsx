@@ -29,11 +29,11 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
             <DashNav user={user} />
           </header>
 
-          <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 bg-background transition-colors duration-200">
-            <div className="mx-auto max-w-6xl">
-              {children}
-            </div>
-          </main>
+        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 bg-background transition-colors duration-200">
+  <div className="mx-auto max-w-6xl min-w-0">
+    {children}
+  </div>
+</main>
         </SidebarInset>
       </SidebarProvider>
     </TooltipProvider>

@@ -6,30 +6,35 @@ import { STATUS_COLORS, STATUS_LABELS, Task } from "../tasks/types";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
-interface DueMeta { label: string; urgent: boolean }
+interface DueMeta {
+  label: string;
+  urgent: boolean;
+}
 
 function getDueMeta(dateStr: string): DueMeta {
   const d = new Date(dateStr);
-  if (isPast(d) && !isToday(d)) return { label: "Overdue",       urgent: true  };
-  if (isToday(d))               return { label: "Due today",     urgent: true  };
-  if (isTomorrow(d))            return { label: "Due tomorrow",  urgent: true  };
-  return                               { label: format(d, "MMM d"), urgent: false };
+  if (isPast(d) && !isToday(d)) return { label: "Overdue", urgent: true };
+  if (isToday(d)) return { label: "Due today", urgent: true };
+  if (isTomorrow(d)) return { label: "Due tomorrow", urgent: true };
+  return { label: format(d, "MMM d"), urgent: false };
 }
 
 // ─── TaskRow ──────────────────────────────────────────────────────────────────
 
 interface TaskRowProps {
-  task:        Task;
+  task: Task;
   workspaceId: string;
 }
 
 export function TaskRow({ task, workspaceId }: TaskRowProps) {
   const { bg, text, dot } = STATUS_COLORS[task.status];
-  const dueMeta: DueMeta | null = task.dueDate ? getDueMeta(task.dueDate) : null;
+  const dueMeta: DueMeta | null = task.dueDate
+    ? getDueMeta(task.dueDate)
+    : null;
 
   return (
     <Link
-      href={`/dashboard/workspace/${workspaceId}/tasks/${task.$id}`}
+      href={`/dashboard/${workspaceId}/tasks/${task.$id}`}
       className="group flex items-center gap-3 py-3 px-4 -mx-4 rounded-xl hover:bg-gray-50 transition-colors"
     >
       <span className={cn("w-2 h-2 rounded-full shrink-0", dot)} />
@@ -54,7 +59,8 @@ export function TaskRow({ task, workspaceId }: TaskRowProps) {
       <span
         className={cn(
           "hidden sm:inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md border shrink-0",
-          bg, text,
+          bg,
+          text,
         )}
       >
         {STATUS_LABELS[task.status]}
@@ -68,8 +74,8 @@ export function TaskRow({ task, workspaceId }: TaskRowProps) {
 // ─── SectionHeader ────────────────────────────────────────────────────────────
 
 interface SectionHeaderProps {
-  icon:   React.ReactNode;
-  title:  string;
+  icon: React.ReactNode;
+  title: string;
   count?: number;
 }
 
@@ -92,12 +98,16 @@ export function SectionHeader({ icon, title, count }: SectionHeaderProps) {
 // ─── MyTasksList ──────────────────────────────────────────────────────────────
 
 interface MyTasksListProps {
-  tasks:       Task[];
+  tasks: Task[];
   workspaceId: string;
-  isLoading:   boolean;
+  isLoading: boolean;
 }
 
-export function MyTasksList({ tasks, workspaceId, isLoading }: MyTasksListProps) {
+export function MyTasksList({
+  tasks,
+  workspaceId,
+  isLoading,
+}: MyTasksListProps) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
       <SectionHeader
@@ -108,7 +118,7 @@ export function MyTasksList({ tasks, workspaceId, isLoading }: MyTasksListProps)
 
       {isLoading ? (
         <MyTasksSkeleton />
-      ) : tasks.length === 0 ? (
+      ) : tasks.length === 0 && isLoading==false? (
         <div className="py-10 text-center">
           <CheckCircle2 className="size-8 text-green-300 mx-auto mb-2" />
           <p className="text-sm text-gray-400">No open tasks assigned to you</p>

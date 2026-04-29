@@ -3,36 +3,25 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { ChevronsUpDown, Circle, Plus, Sparkles } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "./theme-toggle";
 import { NAV_ITEMS } from "@/lib/dashboard";
 import { WorkspaceSwitcher } from "./workspace-swicher";
 import Project from "@/fetures/projects/components/project";
 import { CreateProjectModal } from "@/fetures/projects/components/project-model";
-import { useGetMyTasks } from "@/fetures/tasks/api/use-getmy-task";
 
 interface AppSidebarProps {
   user: {
@@ -46,24 +35,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
   const params = useParams();
   const workspaceId = params.workspace as string;
-
-  /**
-   * Optimization: Fetch tasks using the user's email or a "me" flag 
-   * if your API supports it, avoiding the need to fetch the full members list.
-   * If your API strictly requires memberId, ensure your `user` object 
-   * includes it to prevent an extra API hop.
-   */
- 
-
-
-  const initials = React.useMemo(() => {
-    return (user?.name ?? "JD")
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  }, [user]);
 
   return (
     <>
@@ -103,11 +74,12 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </SidebarGroupLabel>
             <SidebarMenu className="gap-1 px-2">
               {NAV_ITEMS.map(({ title, id, icon: Icon }) => {
-                const href = id === "home" 
-                  ? `/dashboard/workspace/${workspaceId}`
-                  : id === "my-tasks"
-                  ? `/dashboard/workspace/${workspaceId}/my-tasks`
-                  : `/dashboard/${workspaceId}/${id}`;
+                const href =
+                  id === "home"
+                    ? `/dashboard/workspace/${workspaceId}`
+                    : id === "my-tasks"
+                      ? `/dashboard/workspace/${workspaceId}/my-tasks`
+                      : `/dashboard/${workspaceId}/${id}`;
 
                 const isActive = pathname === href;
 
@@ -121,15 +93,19 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         "rounded-lg px-3 py-2 transition-all duration-200",
                         isActive
                           ? "bg-indigo-50 text-indigo-700 font-semibold"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
                       )}
                     >
                       <Link href={href}>
-                        <Icon className={cn("h-4 w-4", isActive ? "text-indigo-600" : "text-slate-400")} />
+                        <Icon
+                          className={cn(
+                            "h-4 w-4",
+                            isActive ? "text-indigo-600" : "text-slate-400",
+                          )}
+                        />
                         <span>{title}</span>
                       </Link>
                     </SidebarMenuButton>
-
                   </SidebarMenuItem>
                 );
               })}

@@ -406,7 +406,7 @@ export default function TaskDetailPage() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
           >
             <ArrowLeft className="size-4" />
             Back

@@ -1,10 +1,8 @@
 import { CreateWorkspaceForm } from '@/fetures/workspace/components/create-workspace'
-import React from 'react'
 export const dynamic = "force-dynamic";
 const page = () => {
   return (
     <div className='flex items-center justify-center h-screen'>
-
       <CreateWorkspaceForm/>
     </div>
   )

@@ -158,16 +158,8 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {/*
-        KEY FIX:
-        - Wrap in a `w-full overflow-x-auto` container so scroll is
-          contained within this element, not the whole page.
-        - Remove `min-w-max` from the inner flex div — instead use
-          `w-max` so it sizes to content but doesn't bleed out.
-        - Add `pb-2` so the scrollbar doesn't overlap cards.
-      */}
-      <div className="w-full overflow-x-auto pb-2">
-        <div className="flex gap-4 w-max">
+   <div className="overflow-x-auto pb-2">
+  <div className="flex gap-4" style={{ width: "max-content" }}>
           {COLUMN_ORDER.map((status) => {
             const colTasks = boardData[status];
             const c = STATUS_COLORS[status];
@@ -179,7 +171,7 @@ export function KanbanView({ tasks, isLoading, onChange }: KanbanViewProps) {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     className={cn(
-                      "flex flex-col gap-3 w-64 rounded-xl p-1.5 transition-colors shrink-0",
+                      "flex flex-col gap-2 w-64 rounded-xl p-1.5 transition-colors shrink-0",
                       snapshot.isDraggingOver ? "bg-gray-50" : "bg-transparent"
                     )}
                   >
