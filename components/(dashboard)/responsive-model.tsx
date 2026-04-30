@@ -41,7 +41,7 @@ export function ResponsiveModal({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-full sm:max-w-lg !p-0 !border-none gap-0 outline-none overflow-hidden hide-scrollbar bg-background shadow-none">
+        <DialogContent className="w-full sm:max-w-lg p-0! border-none! gap-0 outline-none overflow-hidden hide-scrollbar bg-background shadow-none">
           {/* 3. Add the hidden DialogTitle */}
           <DialogTitle className="sr-only">{title}</DialogTitle>
           {children}
