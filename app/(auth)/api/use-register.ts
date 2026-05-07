@@ -4,16 +4,16 @@ import { InferResponseType, InferRequestType } from "hono/client";
 import { useRouter } from "next/navigation";
 
 type ResponseType = InferResponseType<
-  typeof client.api.auth.register["$post"]
+  (typeof client.api.auth.register)["$post"]
 >;
 
 type RequestType = InferRequestType<
-  typeof client.api.auth.register["$post"]
+  (typeof client.api.auth.register)["$post"]
 >["json"];
 
 export const useRegister = () => {
   const queryClient = useQueryClient(); // ✅ FIX
-  const router = useRouter();           // ✅ FIX
+  const router = useRouter(); // ✅ FIX
 
   return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
@@ -30,7 +30,7 @@ export const useRegister = () => {
       // ✅ update auth state
       queryClient.invalidateQueries({ queryKey: ["current"] });
       // ✅ refresh server components
-        router.push('/dashboard')
+      router.push("/dashboard");
     },
   });
 };
