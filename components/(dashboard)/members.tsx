@@ -36,7 +36,7 @@ import { AVATAR_COLORS } from "@/lib/data";
 type Role = "ADMIN" | "MEMBER";
 
 interface Member {
-  $id: string; 
+  $id: string;
   name: string;
   email: string;
   role: Role;
@@ -78,13 +78,20 @@ function getAvatarColor(name: string) {
 
 function Avatar({ name }: { name?: string }) {
   const safeName = name || "Unknown";
-  const initials = safeName.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
+  const initials = safeName
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
-    <div className={cn(
-      "flex items-center justify-center w-9 h-9 rounded-full text-sm font-semibold shrink-0 select-none",
-      getAvatarColor(safeName),
-    )}>
+    <div
+      className={cn(
+        "flex items-center justify-center w-9 h-9 rounded-full text-sm font-semibold shrink-0 select-none",
+        getAvatarColor(safeName),
+      )}
+    >
       {initials}
     </div>
   );
@@ -139,7 +146,9 @@ function MemberRow({
         <Avatar name={member.name} />
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-900 truncate">{member.name}</p>
+          <p className="text-sm font-medium text-slate-900 truncate">
+            {member.name}
+          </p>
           <p className="text-xs text-slate-400 truncate">{member.email}</p>
         </div>
 
@@ -158,7 +167,10 @@ function MemberRow({
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-44 bg-white border-none">
+          <DropdownMenuContent
+            align="end"
+            className="w-44 bg-white border-none"
+          >
             <DropdownMenuItem
               onClick={() => onSetAdmin(member.$id)}
               disabled={member.role === "ADMIN" || isPending}
@@ -217,8 +229,10 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
 
   const filtered = members.filter((m) => {
     const searchLower = search.toLowerCase();
-    return (m.name || "").toLowerCase().includes(searchLower) || 
-           (m.email || "").toLowerCase().includes(searchLower);
+    return (
+      (m.name || "").toLowerCase().includes(searchLower) ||
+      (m.email || "").toLowerCase().includes(searchLower)
+    );
   });
 
   const admins = filtered.filter((m) => m.role === "ADMIN");
@@ -233,10 +247,14 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Users className="h-5 w-5 text-violet-600" />
-                <h1 className="text-xl font-semibold text-slate-900">Members</h1>
+                <h1 className="text-xl font-semibold text-slate-900">
+                  Members
+                </h1>
               </div>
               <p className="text-sm text-slate-400">
-                {isLoading ? "Loading members..." : `${members.length} people in your workspace`}
+                {isLoading
+                  ? "Loading members..."
+                  : `${members.length} people in your workspace`}
               </p>
             </div>
             <Button
@@ -264,13 +282,17 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
               <div>
                 <Skeleton className="h-3 w-20 mb-2 ml-1" />
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100">
-                  {[1, 2].map((i) => <MemberRowSkeleton key={i} />)}
+                  {[1, 2].map((i) => (
+                    <MemberRowSkeleton key={i} />
+                  ))}
                 </div>
               </div>
               <div>
                 <Skeleton className="h-3 w-20 mb-2 ml-1" />
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-100">
-                  {[1, 2, 3].map((i) => <MemberRowSkeleton key={i} />)}
+                  {[1, 2, 3].map((i) => (
+                    <MemberRowSkeleton key={i} />
+                  ))}
                 </div>
               </div>
             </div>
