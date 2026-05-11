@@ -177,7 +177,7 @@ export function WorkspaceSwitcher() {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 className="gap-2 p-2 cursor-pointer text-muted-foreground"
                 onClick={() => router.push("/workspace/create")}
               >
@@ -185,7 +185,7 @@ export function WorkspaceSwitcher() {
                   <Plus className="size-4" />
                 </div>
                 <span className="font-medium">Create workspace</span>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
