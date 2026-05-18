@@ -4,7 +4,7 @@ import { Badge } from "./shared";
 export function KanbanMock() {
   const view = VIEWS[0];
   return (
-    <div className="grid grid-cols-4 gap-3 p-4 bg-slate-50 rounded-xl min-h-[220px]">
+    <div className="grid grid-cols-4 gap-3 p-4 bg-slate-50 rounded-xl min-h-55">
       {view.cols?.map((col, ci) => (
         <div key={col} className="flex flex-col gap-2">
           <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1">{col}</p>

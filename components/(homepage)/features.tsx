@@ -24,7 +24,7 @@ export function Features() {
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
             <FadeIn key={title} delay={i * 60}>
               <div className="group relative bg-white border border-slate-200 rounded-2xl p-6 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-50 transition-all cursor-pointer overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-violet-50/0 group-hover:from-indigo-50/60 group-hover:to-violet-50/40 transition-all" />
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-50/0 to-violet-50/0 group-hover:from-indigo-50/60 group-hover:to-violet-50/40 transition-all" />
                 <div className="relative">
                   <div className="w-10 h-10 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center mb-4 transition-colors">
                     <Icon className="w-5 h-5 text-indigo-600" />

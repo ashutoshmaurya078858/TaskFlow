@@ -16,9 +16,9 @@ export function HowItWorks() {
             <FadeIn key={step} delay={i * 80}>
               <div className="relative text-center px-4">
                 {i < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-9 left-[calc(50%+28px)] right-[-calc(50%-28px)] h-px bg-gradient-to-r from-indigo-200 to-transparent" />
+                  <div className="hidden lg:block absolute top-9 left-[calc(50%+28px)] right-[-calc(50%-28px)] h-px bg-linear-to-r from-indigo-200 to-transparent" />
                 )}
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 flex items-center justify-center mx-auto mb-5 shadow-md shadow-indigo-50">
+                <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-indigo-50 to-violet-50 border border-indigo-100 flex items-center justify-center mx-auto mb-5 shadow-md shadow-indigo-50">
                   <Icon className="w-7 h-7 text-indigo-600" />
                 </div>
                 <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-2">{step}</p>

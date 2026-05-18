@@ -5,7 +5,7 @@ import { KanbanMock } from "./mocks";
 export function Hero() {
   return (
     <section className="relative pt-32 pb-24 overflow-hidden bg-white">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-indigo-50 via-violet-50 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-125 bg-linear-to-b from-indigo-50 via-violet-50 to-transparent rounded-full blur-3xl opacity-60 pointer-events-none" />
       <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
       <div className="absolute top-40 right-10 w-72 h-72 bg-violet-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
 
@@ -21,7 +21,7 @@ export function Hero() {
         <FadeIn delay={80}>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.05] mb-6">
             Manage projects{" "}
-            <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-indigo-500 via-violet-500 to-purple-600 bg-clip-text text-transparent">
               faster & smarter
             </span>
           </h1>
@@ -36,7 +36,7 @@ export function Hero() {
 
         <FadeIn delay={240}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="group flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:opacity-95 transition-all">
+            <button className="group flex items-center gap-2 bg-linear-to-r from-indigo-500 to-violet-600 text-white font-semibold text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:opacity-95 transition-all">
               Get started free
               <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -74,7 +74,7 @@ export function Hero() {
         <FadeIn delay={400}>
           <div className="relative mx-auto max-w-5xl">
             <div
-              className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10 pointer-events-none"
+              className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white z-10 pointer-events-none"
               style={{ top: "70%" }}
             />
             <div className="bg-white rounded-2xl shadow-2xl shadow-slate-200 border border-slate-200 overflow-hidden">

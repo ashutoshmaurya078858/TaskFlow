@@ -5,7 +5,7 @@ export function CTABanner() {
   return (
     <section
       id="about"
-      className="py-28 relative overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700"
+      className="py-28 relative overflow-hidden bg-linear-to-br from-indigo-600 via-violet-600 to-purple-700"
     >
       <div
         className="absolute inset-0 opacity-10"
