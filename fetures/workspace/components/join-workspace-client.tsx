@@ -44,7 +44,7 @@ export default function JoinWorkspaceClient({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="flex items-center justify-center min-h-screen px-4 bg-linear-to-br from-slate-50 to-slate-100">
       <Card className="w-full max-w-md shadow-xl border-0 rounded-2xl backdrop-blur-lg bg-white/80">
         <CardHeader className="text-center space-y-3">
           <div className="mx-auto w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center">
