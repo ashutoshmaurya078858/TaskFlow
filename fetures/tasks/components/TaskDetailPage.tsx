@@ -584,7 +584,7 @@ export default function TaskDetailPage() {
           {!isEditingDesc && (
             <button
               onClick={startEditDesc}
-              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 rounded-md hover:bg-gray-100"
+              className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors px-2 py-1 rounded-md hover:bg-gray-100 cursor-pointer"
             >
               <Pencil className="size-3" />
               Edit
@@ -606,7 +606,7 @@ export default function TaskDetailPage() {
                 size="sm"
                 variant="ghost"
                 onClick={() => setIsEditingDesc(false)}
-                className="text-gray-500 h-8"
+                className="text-gray-500 h-8 cursor-pointer"
               >
                 Cancel
               </Button>
@@ -614,7 +614,7 @@ export default function TaskDetailPage() {
                 size="sm"
                 onClick={handleSaveDesc}
                 disabled={isUpdating}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white h-8 px-4"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white h-8 px-4 cursor-pointer"
               >
                 {isUpdating && (
                   <Loader2 className="size-3.5 animate-spin mr-1.5" />
@@ -630,7 +630,7 @@ export default function TaskDetailPage() {
         ) : (
           <button
             onClick={startEditDesc}
-            className="w-full text-sm text-gray-300 hover:text-gray-400 transition-colors py-8 border-2 border-dashed border-gray-100 rounded-xl text-center hover:border-gray-200"
+            className="w-full text-sm text-gray-300 hover:text-gray-400 transition-colors py-8 border-2 border-dashed border-gray-100 rounded-xl text-center hover:border-gray-200 cursor-pointer"
           >
             Click to add a description...
           </button>
