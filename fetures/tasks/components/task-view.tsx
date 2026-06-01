@@ -56,7 +56,7 @@ export default function TaskView() {
   const { data: membersData } = useGetMembers({ workspaceId });
   const { data: tasksData, isLoading: isLoadingTasks } = useGetTask({
     workspaceId,
-    projectId
+    projectId,
   });
 
   // --- Mutations ---
@@ -177,15 +177,15 @@ export default function TaskView() {
               onView={handleOpenTask}
             />
           )}
-          
-         <div className="min-w-0 overflow-hidden">
-  {activeTab === "kanban" && (
-            <KanbanView
-              tasks={tasks}
-              isLoading={isLoadingTasks}
-              onChange={handleKanbanChange} // ← NEW
-            />
-          )}
+
+          <div className="min-w-0 overflow-hidden">
+            {activeTab === "kanban" && (
+              <KanbanView
+                tasks={tasks}
+                isLoading={isLoadingTasks}
+                onChange={handleKanbanChange} // ← NEW
+              />
+            )}
           </div>
           {activeTab === "calendar" && (
             <CalendarView tasks={tasks} isLoading={isLoadingTasks} />
