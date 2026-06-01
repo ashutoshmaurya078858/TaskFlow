@@ -260,7 +260,7 @@ export default function MembersPage({ workspaceId }: { workspaceId: string }) {
             <Button
               onClick={() => setOpen(true)}
               size="sm"
-              className="gap-1.5 bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
+              className="gap-1.5 bg-violet-600 hover:bg-violet-700 text-white shadow-sm cursor-pointer"
             >
               <UserPlus className="h-3.5 w-3.5" />
               Invite

@@ -157,7 +157,7 @@ export default function TaskView() {
           <Button
             size="sm"
             onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg shadow-sm"
+            className="flex items-center gap-1.5 h-9 px-4 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg shadow-sm cursor-pointer"
           >
             <Plus className="size-4" />
             New Task

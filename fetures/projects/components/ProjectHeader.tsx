@@ -60,7 +60,7 @@ export function ProjectHeader({
           variant="outline"
           size="sm"
           onClick={() => setEditOpen(true)}
-          className="flex items-center gap-1.5 h-9 px-3 text-sm border-gray-300 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg"
+          className="flex items-center gap-1.5 h-9 px-3 text-sm border-gray-300 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg cursor-pointer"
         >
           <Pencil className="size-3.5" />
           Edit Project
