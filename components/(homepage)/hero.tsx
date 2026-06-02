@@ -36,11 +36,11 @@ export function Hero() {
 
         <FadeIn delay={240}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="group flex items-center gap-2 bg-linear-to-r from-indigo-500 to-violet-600 text-white font-semibold text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:opacity-95 transition-all">
+            <button className="group flex items-center gap-2 bg-linear-to-r from-indigo-500 to-violet-600 text-white font-semibold text-sm px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:opacity-95 transition-all cursor-pointer">
               Get started free
               <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 font-semibold text-sm px-7 py-3.5 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+            <button className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 font-semibold text-sm px-7 py-3.5 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm cursor-pointer">
               <Play className="w-4 h-4 text-indigo-500" />
               Book a demo
             </button>
