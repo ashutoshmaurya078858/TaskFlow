@@ -1,11 +1,13 @@
 import { Sparkles, Mail } from "lucide-react";
+import { FaGithub, FaTwitter, FaYoutube, FaLinkedin } from "react-icons/fa";
 
-import {
-  FaGithub,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedin
-} from "react-icons/fa";
+const socials = [
+  { Icon: FaTwitter,  label: "Twitter"  },
+  { Icon: FaLinkedin, label: "LinkedIn" },
+  { Icon: FaGithub,   label: "GitHub"   },
+  { Icon: FaYoutube,  label: "YouTube"  },
+  { Icon: Mail,       label: "Email"    },
+];
 
 export function Footer() {
   return (
@@ -15,7 +17,7 @@ export function Footer() {
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-7 h-7 rounded-lg bg-linear-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
+                <Sparkles className="w-3.5 h-3.5 text-white" aria-hidden="true" />
               </div>
               <span className="text-white font-bold text-base">FlowTask</span>
             </div>
@@ -23,9 +25,13 @@ export function Footer() {
               The modern project management tool for teams that value speed, clarity, and craftsmanship.
             </p>
             <div className="flex items-center gap-3">
-              {[FaTwitter, FaLinkedin, FaGithub, FaYoutube, Mail].map((Icon, i) => (
-                <button key={i} className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors">
-                  <Icon className="w-3.5 h-3.5" />
+              {socials.map(({ Icon, label }) => (
+                <button
+                  key={label}
+                  aria-label={`Follow us on ${label}`}
+                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors"
+                >
+                  <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                 </button>
               ))}
             </div>

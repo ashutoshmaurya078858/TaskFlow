@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="url(#g)"/>
+  <!-- Sparkles icon (simplified for favicon size) -->
+  <g fill="white">
+    <!-- Main star -->
+    <path d="M16 7 L17.2 13.8 L24 15 L17.2 16.2 L16 23 L14.8 16.2 L8 15 L14.8 13.8 Z"/>
+    <!-- Small star top-right -->
+    <path d="M21 8 L21.6 10.4 L24 11 L21.6 11.6 L21 14 L20.4 11.6 L18 11 L20.4 10.4 Z"/>
+    <!-- Small star bottom-left -->
+    <path d="M11 18 L11.5 19.8 L13.5 20.3 L11.5 20.8 L11 22.5 L10.5 20.8 L8.5 20.3 L10.5 19.8 Z"/>
+  </g>
+</svg>
